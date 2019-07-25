@@ -12,36 +12,28 @@ const getNameByRef = (str: string) => {
 function resolveProperties(
   properties: { [propertyName: string]: Schema },
   definitions: { [definitionsName: string]: Schema },
-  parentName: string,
 ) {
   const results: any = {};
 
   keys(properties).map((name) => {
     if (properties[name].$ref) {
       const key = getNameByRef(properties[name].$ref!);
-      if (parentName === key) {
-        // console.log(key,'xx')
-        // results[name] = properties[name];
+      if (key === "File") {
         return;
       }
 
-      // console.log(_definitions[key])
-
-      console.log(key,name)
-
-      results[name] = resolveDefinition(definitions[key], definitions, key);
+      results[name] = resolveDefinition(definitions[key], definitions);
       return;
     }
     if (properties[name].type === "array" && properties[name].items) {
       const itemKey = getNameByRef((properties[name].items! as any).$ref);
-      if (parentName === itemKey) {
-        console.log(itemKey, "item");
-        // results[name] = properties[name];
+
+      if (itemKey === "File") {
         return;
       }
       results[name] = {
         type: properties[name].type,
-        items: resolveDefinition(definitions[itemKey], definitions, name),
+        items: resolveDefinition(definitions[itemKey], definitions),
       };
       return;
     }
@@ -51,15 +43,11 @@ function resolveProperties(
   return results;
 }
 
-function resolveDefinition(
-  definition: Schema = {},
-  definitions: { [definitionsName: string]: Schema },
-  parentName: string,
-) {
+function resolveDefinition(definition: Schema = {}, definitions: { [definitionsName: string]: Schema }) {
   if (definition.properties) {
     return {
       ...definition,
-      properties: resolveProperties(definition.properties!, definitions, parentName),
+      properties: resolveProperties(definition.properties!, definitions),
     };
   }
   return definition;
@@ -68,7 +56,7 @@ function resolveDefinition(
 export function resolveDefinitions(definitions: { [definitionsName: string]: Schema }) {
   const results: any = {};
   keys(definitions).map((name) => {
-    results[name] = resolveDefinition(definitions[name], definitions, name);
+    results[name] = resolveDefinition(definitions[name], definitions);
   });
   return results;
 }
