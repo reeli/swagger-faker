@@ -11,12 +11,16 @@ const getNameByRef = (str: string) => {
 
 type TDefinitions = { [definitionsName: string]: Schema };
 
+interface ITraverseOptions {
+  handleRef: (key: string, data: Schema) => any;
+}
+
 export class Traverse {
-  static of(definitions: TDefinitions) {
-    return new Traverse(definitions);
+  static of(definitions: TDefinitions, options?: ITraverseOptions) {
+    return new Traverse(definitions, options);
   }
 
-  constructor(private definitions: TDefinitions) {}
+  constructor(private definitions: TDefinitions, private options?: ITraverseOptions) {}
 
   traverse = () => {
     const results: TDefinitions = {};
@@ -37,33 +41,48 @@ export class Traverse {
   };
 
   resolveProperties = (properties: { [propertyName: string]: Schema }) => {
-    const results: any = {};
+    const resolvedProperties: any = {};
 
     keys(properties).map((name) => {
       if (properties[name].$ref) {
-        const key = getNameByRef(properties[name].$ref!);
-        if (key === "File") {
-          return;
+        const refKey = getNameByRef(properties[name].$ref!);
+
+        if (this.options && this.options.handleRef) {
+          const data = this.options.handleRef(refKey, properties[name]);
+          if (data) {
+            resolvedProperties[name] = data;
+            return;
+          }
         }
 
-        results[name] = this.resolveDefinition(this.definitions[key]);
+        resolvedProperties[name] = this.resolveDefinition(this.definitions[refKey]);
         return;
       }
       if (properties[name].type === "array" && properties[name].items) {
-        const itemKey = getNameByRef((properties[name].items! as any).$ref);
+        //TODO: handle the case when items === "array"
+        const refKey = getNameByRef((properties[name].items! as any).$ref);
 
-        if (itemKey === "File") {
-          return;
+        if (this.options && this.options.handleRef) {
+          const data = this.options.handleRef(refKey, properties[name]);
+          if (data) {
+            resolvedProperties[name] = {
+              type: properties[name].type,
+              items: data,
+            };
+            return;
+          }
         }
-        results[name] = {
+
+        resolvedProperties[name] = {
           type: properties[name].type,
-          items: this.resolveDefinition(this.definitions[itemKey]),
+          items: this.resolveDefinition(this.definitions[refKey]),
         };
         return;
       }
-      results[name] = properties[name];
+      resolvedProperties[name] = properties[name];
       return;
     });
-    return results;
+
+    return resolvedProperties;
   };
 }
