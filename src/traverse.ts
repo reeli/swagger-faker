@@ -9,54 +9,61 @@ const getNameByRef = (str: string) => {
   return list[list.length - 1];
 };
 
-function resolveProperties(
-  properties: { [propertyName: string]: Schema },
-  definitions: { [definitionsName: string]: Schema },
-) {
-  const results: any = {};
+type TDefinitions = { [definitionsName: string]: Schema };
 
-  keys(properties).map((name) => {
-    if (properties[name].$ref) {
-      const key = getNameByRef(properties[name].$ref!);
-      if (key === "File") {
-        return;
-      }
-
-      results[name] = resolveDefinition(definitions[key], definitions);
-      return;
-    }
-    if (properties[name].type === "array" && properties[name].items) {
-      const itemKey = getNameByRef((properties[name].items! as any).$ref);
-
-      if (itemKey === "File") {
-        return;
-      }
-      results[name] = {
-        type: properties[name].type,
-        items: resolveDefinition(definitions[itemKey], definitions),
-      };
-      return;
-    }
-    results[name] = properties[name];
-    return;
-  });
-  return results;
-}
-
-function resolveDefinition(definition: Schema = {}, definitions: { [definitionsName: string]: Schema }) {
-  if (definition.properties) {
-    return {
-      ...definition,
-      properties: resolveProperties(definition.properties!, definitions),
-    };
+export class Traverse {
+  static of(definitions: TDefinitions) {
+    return new Traverse(definitions);
   }
-  return definition;
-}
 
-export function resolveDefinitions(definitions: { [definitionsName: string]: Schema }) {
-  const results: any = {};
-  keys(definitions).map((name) => {
-    results[name] = resolveDefinition(definitions[name], definitions);
-  });
-  return results;
+  constructor(private definitions: TDefinitions) {}
+
+  traverse = () => {
+    const results: TDefinitions = {};
+    keys(this.definitions).map((name) => {
+      results[name] = this.resolveDefinition(this.definitions[name]);
+    });
+    return results;
+  };
+
+  resolveDefinition = (definition: Schema = {}) => {
+    if (definition.properties) {
+      return {
+        ...definition,
+        properties: this.resolveProperties(definition.properties!),
+      };
+    }
+    return definition;
+  };
+
+  resolveProperties = (properties: { [propertyName: string]: Schema }) => {
+    const results: any = {};
+
+    keys(properties).map((name) => {
+      if (properties[name].$ref) {
+        const key = getNameByRef(properties[name].$ref!);
+        if (key === "File") {
+          return;
+        }
+
+        results[name] = this.resolveDefinition(this.definitions[key]);
+        return;
+      }
+      if (properties[name].type === "array" && properties[name].items) {
+        const itemKey = getNameByRef((properties[name].items! as any).$ref);
+
+        if (itemKey === "File") {
+          return;
+        }
+        results[name] = {
+          type: properties[name].type,
+          items: this.resolveDefinition(this.definitions[itemKey]),
+        };
+        return;
+      }
+      results[name] = properties[name];
+      return;
+    });
+    return results;
+  };
 }
