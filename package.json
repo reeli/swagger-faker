@@ -8,21 +8,21 @@
     "README.md"
   ],
   "scripts": {
-    "start": "",
+    "start": " ts-node src/index.ts",
     "test": "jest",
     "build": "rm -rf dist/ && tsc",
     "prepare": "npm run build && npm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reeli/ts-codegen.git"
+    "url": "git@github.com:reeli/swagger-faker.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/reeli/ts-codegen/issues"
+    "url": "git@github.com:reeli/swagger-faker.git"
   },
-  "homepage": "https://github.com/reeli/ts-codegen#readme",
+  "homepage": "git@github.com:reeli/swagger-faker.git",
   "devDependencies": {
     "commander": "2.20.0",
     "@babel/core": "7.4.3",
