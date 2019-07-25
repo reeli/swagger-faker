@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Spec } from "swagger-schema-official";
 import program from "commander";
-import { resolveDefinitions } from "./traverse";
+import { Traverse } from "./traverse";
 
 program.option("-o, --operationId <type>", "add operation id").parse(process.argv);
 
@@ -16,7 +16,13 @@ function printExamples(operationId: string) {
   const schemaStr = fs.readFileSync("./__swagger__/swagger.json", "utf8");
   const schema = JSON.parse(schemaStr) as Spec;
   if (schema.definitions) {
-    const data = resolveDefinitions(schema.definitions);
+    const data = Traverse.of(schema.definitions, {
+      handleRef: (key) => {
+        if (key === "File") {
+          return "string";
+        }
+      },
+    }).traverse();
     fs.writeFileSync("./test.json", JSON.stringify(data, null, 2), "utf-8");
   }
 }
