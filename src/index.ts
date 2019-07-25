@@ -23,7 +23,12 @@ function printExamples(operationId: string) {
         }
       },
     }).traverse();
-    fs.writeFileSync("./test.json", JSON.stringify(data, null, 2), "utf-8");
+
+    if (!fs.existsSync(".output")) {
+      fs.mkdirSync(".output");
+    }
+
+    fs.writeFileSync("./.output/test.json", JSON.stringify(data, null, 2), "utf-8");
   }
 }
 
