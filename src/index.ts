@@ -6,7 +6,7 @@ import { getFaker } from "./faker";
 printExamples();
 
 function printExamples() {
-  const schemaStr = fs.readFileSync("./__swagger__/swagger.json", "utf8");
+  const schemaStr = fs.readFileSync("./examples/swagger.json", "utf8");
   const schema = JSON.parse(schemaStr) as Spec;
   if (schema.definitions) {
     const data = Traverse.of(schema.definitions, {
