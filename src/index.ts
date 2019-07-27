@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Spec } from "swagger-schema-official";
 import { Traverse } from "./traverse";
-import { getFaker } from "./faker";
+import {getFaker} from "./faker";
 
 printExamples();
 
@@ -22,7 +22,7 @@ function printExamples() {
       fs.mkdirSync(".output");
     }
 
-    console.log(getFaker(data.DashboardVO));
+    console.log(getFaker(data.BookDetailVo));
 
     fs.writeFileSync("./.output/test.json", JSON.stringify(data, null, 2), "utf-8");
   }

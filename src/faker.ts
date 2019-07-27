@@ -1,7 +1,7 @@
 import { Schema } from "swagger-schema-official";
 import { mapValues } from "lodash";
 
-export const getFaker = (schema: Schema) => {
+export const getFaker = (schema: Schema = {}) => {
   if (schema.type === "object") {
     return mapValues(schema.properties, (property) => {
       if (property && property.type && dataMapping[property.type]) {

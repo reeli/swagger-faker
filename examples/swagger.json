@@ -489,7 +489,7 @@
         "schedules": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ScheduleVO"
+            "$ref": "#/definitions/InputStream"
           }
         },
         "shiftId": {
