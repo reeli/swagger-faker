@@ -1,18 +1,18 @@
 import { Schema } from "swagger-schema-official";
-import { keys } from "lodash";
-
-const getNameByRef = (str: string) => {
-  if (!str) {
-    return "";
-  }
-  const list = str.split("/");
-  return list[list.length - 1];
-};
+import { mapValues } from "lodash";
+import { pickRefKey } from "./utils";
 
 type TDefinitions = { [definitionsName: string]: Schema };
+type TProperties = { [propertyName: string]: Schema };
 
 interface ITraverseOptions {
-  handleRef: (key: string, data: Schema) => any;
+  handleRef: (
+    data: {
+      refKey: string;
+      property: Schema;
+    },
+    next: () => any,
+  ) => any;
 }
 
 export class Traverse {
@@ -22,67 +22,64 @@ export class Traverse {
 
   constructor(private definitions: TDefinitions, private options?: ITraverseOptions) {}
 
-  traverse = () => {
-    const results: TDefinitions = {};
-    keys(this.definitions).map((name) => {
-      results[name] = this.resolveDefinition(this.definitions[name]);
-    });
-    return results;
-  };
+  traverse = () => mapValues(this.definitions, (definition) => this.resolveDefinition(definition));
 
-  resolveDefinition = (definition: Schema = {}) => {
+  resolveDefinition = (definition: Schema = {}): any => {
+    // TODO: handle definition.additionalProperties
     if (definition.properties) {
       return {
         ...definition,
-        properties: this.resolveProperties(definition.properties!),
+        properties: this.replaceRefInProperties(definition.properties!),
       };
     }
     return definition;
   };
 
-  resolveProperties = (properties: { [propertyName: string]: Schema }) => {
-    const resolvedProperties: any = {};
-
-    keys(properties).map((name) => {
-      if (properties[name].$ref) {
-        const refKey = getNameByRef(properties[name].$ref!);
-
-        if (this.options && this.options.handleRef) {
-          const data = this.options.handleRef(refKey, properties[name]);
-          if (data) {
-            resolvedProperties[name] = data;
-            return;
-          }
-        }
-
-        resolvedProperties[name] = this.resolveDefinition(this.definitions[refKey]);
-        return;
-      }
-      if (properties[name].type === "array" && properties[name].items) {
-        //TODO: handle the case when items === "array"
-        const refKey = getNameByRef((properties[name].items! as any).$ref);
-
-        if (this.options && this.options.handleRef) {
-          const data = this.options.handleRef(refKey, properties[name]);
-          if (data) {
-            resolvedProperties[name] = {
-              type: properties[name].type,
-              items: data,
-            };
-            return;
-          }
-        }
-
-        resolvedProperties[name] = {
-          type: properties[name].type,
-          items: this.resolveDefinition(this.definitions[refKey]),
+  replaceRefInProperties = (properties: TProperties) =>
+    mapValues(properties, (property) => {
+      if (property.$ref) {
+        const refKey = pickRefKey(property.$ref!);
+        const next = () => {
+          return this.resolveDefinition(this.definitions[refKey]);
         };
-        return;
-      }
-      resolvedProperties[name] = properties[name];
-      return;
-    });
+        if (this.options && this.options.handleRef) {
+          return this.options.handleRef(
+            {
+              refKey,
+              property,
+            },
+            next,
+          );
+        }
 
-    return resolvedProperties;
-  };
+        return next();
+      }
+      if (property.type === "array" && property.items) {
+        //TODO: handle the case when items === "array"
+        const refKey = pickRefKey((property.items! as any).$ref);
+
+        const next = () => ({
+          type: property.type,
+          items: this.resolveDefinition(this.definitions[refKey]),
+        });
+
+        if (this.options && this.options.handleRef) {
+          const items = this.options.handleRef(
+            {
+              refKey,
+              property,
+            },
+            next,
+          );
+
+          return {
+            ...property,
+            items,
+          };
+        }
+
+        return next();
+      }
+      return property;
+    });
 }
