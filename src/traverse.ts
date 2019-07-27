@@ -35,7 +35,8 @@ export class Traverse {
       if (property.$ref) {
         return this.handleRef(property);
       }
-      if (property.type === "array" && property.items) {
+      // TODO: handle the case when items === "array"
+      if (property.type === "array" && property.items && (property.items as any).$ref) {
         return this.handleItems(property);
       }
       return property;
@@ -54,7 +55,7 @@ export class Traverse {
   };
 
   handleItems = (property: Schema) => {
-    //TODO: handle the case when items === "array"
+    // TODO: handle the case when items === "array"
     const refKey = pickRefKey((property.items! as any).$ref);
 
     const next = () => ({
