@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Spec } from "swagger-schema-official";
 import { Traverse } from "./traverse";
-import {getFaker} from "./faker";
+import { getFaker } from "./faker";
 
 printExamples();
 
@@ -22,8 +22,11 @@ function printExamples() {
       fs.mkdirSync(".output");
     }
 
-    console.log(JSON.stringify(getFaker(data.FeedbackDetailVO),null,2));
-
     fs.writeFileSync("./.output/test.json", JSON.stringify(data, null, 2), "utf-8");
+    fs.writeFileSync(
+      `./.output/UpdateProfileRequest.json`,
+      JSON.stringify(getFaker(data.UpdateProfileRequest), null, 2),
+      "utf-8",
+    );
   }
 }

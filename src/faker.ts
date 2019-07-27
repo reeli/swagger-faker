@@ -9,6 +9,7 @@ export const getFaker = (schema: Schema = {}): any => {
   if (schema.type === "object") {
     return mapValues(schema.properties, (property) => {
       // TODO: handle number maximal and minimal
+      // TODO: handle enums
       if (property && property.type) {
         if (property.type === "object") {
           return getFaker(property);
@@ -18,7 +19,7 @@ export const getFaker = (schema: Schema = {}): any => {
           return generateItems(property);
         }
 
-        return generateFakeDataByType(property.type as TParameterType);
+        return generateFakeDataByType(property.type as TParameterType, property.example);
       }
       return {};
     });
@@ -27,29 +28,30 @@ export const getFaker = (schema: Schema = {}): any => {
 
 // TODO: remove return value definition "any"
 const generateItems = (items: Schema | Schema[]): any => {
-  if (isArray(items)) {
+  if (isArray(items) || isEmpty(items)) {
     return [];
   }
 
-  if (!isEmpty(items)) {
-    if (items.type === "array") {
-      return items.items && [
-        generateItems(items.items)
-      ];
-    }
-
-    if (items.type === "object") {
-      return getFaker(items);
-    }
-    return [
-      generateFakeDataByType(items.type as any)
-    ];
+  if (items.example) {
+    return items.example;
   }
-  return [];
+
+  if (items.type === "array") {
+    return items.items && [generateItems(items.items)];
+  }
+
+  if (items.type === "object") {
+    return getFaker(items);
+  }
+
+  return [generateFakeDataByType(items.type as any, items.example)];
 };
 
 // TODO: File is not a standard type in swagger v2
-export const generateFakeDataByType = (type: TParameterType) => {
+export const generateFakeDataByType = (type: TParameterType, example?: any) => {
+  if (example) {
+    return example;
+  }
   switch (type) {
     case "boolean":
       return booleanGenerator();
