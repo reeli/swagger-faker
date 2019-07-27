@@ -4,6 +4,8 @@ import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } fro
 
 type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "object" | "file";
 
+export const getAllFaker = (data: { [definitionsName: string]: Omit<Schema, "$ref"> }) => mapValues(data, (item) => getFaker(item));
+
 // TODO: remove return value definition "any"
 export const getFaker = (schema: Schema = {}): any => {
   if (schema.type === "object") {
