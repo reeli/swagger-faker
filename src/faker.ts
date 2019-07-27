@@ -1,19 +1,51 @@
-import { ParameterType, Schema } from "swagger-schema-official";
-import { mapValues } from "lodash";
+import { Schema } from "swagger-schema-official";
+import { isArray, isEmpty, mapValues } from "lodash";
 import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } from "./generators";
 
-type TParameterType = ParameterType & "file";
+type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "object" | "file";
 
-export const getFaker = (schema: Schema = {}) => {
+// TODO: remove return value definition "any"
+export const getFaker = (schema: Schema = {}): any => {
   if (schema.type === "object") {
     return mapValues(schema.properties, (property) => {
       // TODO: handle number maximal and minimal
       if (property && property.type) {
+        if (property.type === "object") {
+          return getFaker(property);
+        }
+
+        if (property.type === "array") {
+          return generateItems(property);
+        }
+
         return generateFakeDataByType(property.type as TParameterType);
       }
       return {};
     });
   }
+};
+
+// TODO: remove return value definition "any"
+const generateItems = (items: Schema | Schema[]): any => {
+  if (isArray(items)) {
+    return [];
+  }
+
+  if (!isEmpty(items)) {
+    if (items.type === "array") {
+      return items.items && [
+        generateItems(items.items)
+      ];
+    }
+
+    if (items.type === "object") {
+      return getFaker(items);
+    }
+    return [
+      generateFakeDataByType(items.type as any)
+    ];
+  }
+  return [];
 };
 
 // TODO: File is not a standard type in swagger v2

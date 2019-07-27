@@ -18,6 +18,7 @@ export class Traverse {
 
   traverse = () => mapValues(this.definitions, (definition) => this.resolveDefinition(definition));
 
+  // TODO: remove return value definition "any"
   resolveDefinition = (definition: Schema = {}): any => {
     // TODO: handle definition.additionalProperties
     if (definition.properties) {

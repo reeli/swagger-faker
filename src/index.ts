@@ -22,7 +22,7 @@ function printExamples() {
       fs.mkdirSync(".output");
     }
 
-    console.log(getFaker(data.BookDetailVo));
+    console.log(JSON.stringify(getFaker(data.FeedbackDetailVO),null,2));
 
     fs.writeFileSync("./.output/test.json", JSON.stringify(data, null, 2), "utf-8");
   }
