@@ -6,13 +6,7 @@ type TDefinitions = { [definitionsName: string]: Schema };
 type TProperties = { [propertyName: string]: Schema };
 
 interface ITraverseOptions {
-  handleRef: (
-    data: {
-      refKey: string;
-      property: Schema;
-    },
-    next: () => any,
-  ) => any;
+  resolveRef: (next: () => Schema) => (refKey: string, property: Schema) => any;
 }
 
 export class Traverse {
@@ -38,48 +32,44 @@ export class Traverse {
   replaceRefInProperties = (properties: TProperties) =>
     mapValues(properties, (property) => {
       if (property.$ref) {
-        const refKey = pickRefKey(property.$ref!);
-        const next = () => {
-          return this.resolveDefinition(this.definitions[refKey]);
-        };
-        if (this.options && this.options.handleRef) {
-          return this.options.handleRef(
-            {
-              refKey,
-              property,
-            },
-            next,
-          );
-        }
-
-        return next();
+        return this.handleRef(property);
       }
       if (property.type === "array" && property.items) {
-        //TODO: handle the case when items === "array"
-        const refKey = pickRefKey((property.items! as any).$ref);
-
-        const next = () => ({
-          type: property.type,
-          items: this.resolveDefinition(this.definitions[refKey]),
-        });
-
-        if (this.options && this.options.handleRef) {
-          const items = this.options.handleRef(
-            {
-              refKey,
-              property,
-            },
-            next,
-          );
-
-          return {
-            ...property,
-            items,
-          };
-        }
-
-        return next();
+        return this.handleItems(property);
       }
       return property;
     });
+
+  handleRef = (property: Schema) => {
+    const refKey = pickRefKey(property.$ref!);
+    const next = () => {
+      return this.resolveDefinition(this.definitions[refKey]);
+    };
+    if (this.options && this.options.resolveRef) {
+      return this.options.resolveRef(next)(refKey, property);
+    }
+
+    return next();
+  };
+
+  handleItems = (property: Schema) => {
+    //TODO: handle the case when items === "array"
+    const refKey = pickRefKey((property.items! as any).$ref);
+
+    const next = () => ({
+      type: property.type,
+      items: this.resolveDefinition(this.definitions[refKey]),
+    });
+
+    if (this.options && this.options.resolveRef) {
+      const items = this.options.resolveRef(next)(refKey, property);
+
+      return {
+        ...property,
+        items,
+      };
+    }
+
+    return next();
+  };
 }
