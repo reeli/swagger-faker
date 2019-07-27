@@ -1,33 +1,34 @@
-import { Schema } from "swagger-schema-official";
+import { ParameterType, Schema } from "swagger-schema-official";
 import { mapValues } from "lodash";
+import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } from "./generators";
+
+type TParameterType = ParameterType & "file";
 
 export const getFaker = (schema: Schema = {}) => {
   if (schema.type === "object") {
     return mapValues(schema.properties, (property) => {
-      if (property && property.type && dataMapping[property.type]) {
-        return dataMapping[property.type];
+      // TODO: handle number maximal and minimal
+      if (property && property.type) {
+        return generateFakeDataByType(property.type as TParameterType);
       }
       return {};
     });
   }
 };
 
-const dataMapping: any = {
-  string: "xxx",
-  number: 11,
-  integer: 111,
-  boolean: true,
-  file: "xxx file",
+// TODO: File is not a standard type in swagger v2
+export const generateFakeDataByType = (type: TParameterType) => {
+  switch (type) {
+    case "boolean":
+      return booleanGenerator();
+    case "string":
+      return stringGenerator();
+    case "number":
+    case "integer":
+      return numberGenerator();
+    case "file":
+      return fileGenerator();
+    default:
+      return "";
+  }
 };
-
-export enum SwaggerDataTypes {
-  string = "string",
-  number = "number",
-  integer = "integer",
-  boolean = "boolean",
-  array = "array",
-  object = "object",
-  file = "file",
-}
-
-// TODO: handle number maximal and minimal
