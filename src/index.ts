@@ -5,11 +5,15 @@ import { getAllFaker, getFaker } from "./faker";
 import { forEach, get, pick } from "lodash";
 import { pickRefKey } from "./utils";
 
-export function printExamples(operationId?: string) {
+export const getSpec = () => {
   const schemaStr = fs.readFileSync("./examples/swagger.json", "utf8");
-  const schema = JSON.parse(schemaStr) as Spec;
-  if (schema.definitions) {
-    const data = Traverse.of(schema.definitions, {
+  return JSON.parse(schemaStr) as Spec;
+};
+
+export function printExamples(operationId?: string) {
+  const spec = getSpec();
+  if (spec.definitions) {
+    const data = Traverse.of(spec.definitions, {
       resolveRef: (next) => (refKey) => {
         if (refKey === "File") {
           return "string";
@@ -25,7 +29,6 @@ export function printExamples(operationId?: string) {
     fs.writeFileSync("./.output/test.json", JSON.stringify(data, null, 2), "utf-8");
 
     if (operationId) {
-      console.log(getResponseByOperationId(schema, operationId));
       fs.writeFileSync(`./.output/${operationId}.json`, JSON.stringify(getFaker(data[operationId]), null, 2), "utf-8");
     } else {
       fs.writeFileSync(`./.output/mock-data.json`, JSON.stringify(getAllFaker(data), null, 2), "utf-8");
@@ -33,7 +36,7 @@ export function printExamples(operationId?: string) {
   }
 }
 
-const getResponseByOperationId = (spec: Spec, operationId: string) => {
+export const getResponseByOperationId = (spec: Spec, operationId: string) => {
   let res = null;
   forEach(spec.paths, (path, pathName) => {
     const operations = pick(path, ["get", "post", "put", "delete", "patch", "options", "head"]);
@@ -44,7 +47,7 @@ const getResponseByOperationId = (spec: Spec, operationId: string) => {
         res = {
           path: spec.basePath ? `${spec.basePath}${p}` : p,
           method,
-          responses: pickRefKey(get((path as any)[method], "responses.200.schema.$ref")),
+          response: pickRefKey(get((path as any)[method], "responses.200.schema.$ref")),
         };
       }
     });
