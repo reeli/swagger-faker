@@ -47,7 +47,11 @@ export const getResponseByOperationId = (spec: Spec, operationId: string) => {
         res = {
           path: spec.basePath ? `${spec.basePath}${p}` : p,
           method,
-          response: pickRefKey(get((path as any)[method], "responses.200.schema.$ref")),
+          responses: {
+            200: pickRefKey(get((path as any)[method], "responses.200.schema.$ref")),
+            201: pickRefKey(get((path as any)[method], "responses.201.schema.$ref")),
+          },
+          operationId,
         };
       }
     });
