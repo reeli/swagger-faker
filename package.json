@@ -8,7 +8,7 @@
     "README.md"
   ],
   "scripts": {
-    "start": " ts-node src/command.ts",
+    "start": " ts-node examples/setMockData.ts",
     "test": "jest",
     "build": "rm -rf dist/ && tsc",
     "prepare": "npm run build && npm test"

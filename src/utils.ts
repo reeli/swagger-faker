@@ -1,4 +1,4 @@
-export const pickRefKey = (str: string) => {
+export const pickRefKey = (str: string | undefined) => {
   if (!str) {
     return "";
   }
