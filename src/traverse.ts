@@ -77,6 +77,7 @@ export class Traverse {
     // TODO: handle items.$ref
 
     if (!items.$ref) {
+      return;
     }
 
     const refKey = pickRefKey(items.$ref);
