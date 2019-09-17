@@ -4,33 +4,50 @@ import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } fro
 
 type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "object" | "file";
 
-export const getAllFaker = (data: { [definitionsName: string]: Omit<Schema, "$ref"> }) => mapValues(data, (item) => getFaker(item));
+export const getAllFaker = (data: { [definitionsName: string]: Omit<Schema, "$ref"> }) =>
+  mapValues(data, (item) => toFakeObj(item));
 
-// TODO: remove return value definition "any"
-export const getFaker = (schema: Schema = {}): any => {
-  if (schema.type === "object") {
-    return mapValues(schema.properties, (property) => {
-      // TODO: handle number maximal and minimal
-      // TODO: handle enums
-      if (property && property.type) {
-        if (property.type === "object") {
-          return getFaker(property);
-        }
+// TODO: handle number maximal and minimal
+// TODO: handle enums
 
-        if (property.type === "array") {
-          return generateItems(property);
-        }
-
-        return generateFakeDataByType(property.type as TParameterType, property.example);
+export const toFakeObj = (schema: Schema = {}): any => {
+  let results = {};
+  const getFakeProperties = (properties: Schema) => {
+    return mapValues(properties, (property) => {
+      switch (property.type) {
+        case "object":
+          return toFakeObj(property);
+        case "array":
+          return toFakeItems(property);
+        default:
+          return toFakeDataByType(property.type as TParameterType, property.example);
       }
-      return {};
     });
+  };
+
+  if (schema.properties) {
+    results = {
+      ...results,
+      ...getFakeProperties(schema.properties),
+    };
   }
+
+  if (schema.additionalProperties) {
+    results = {
+      ...results,
+      ...getFakeProperties(schema.additionalProperties),
+    };
+  }
+
+  return results;
 };
 
-// TODO: remove return value definition "any"
-const generateItems = (items: Schema | Schema[]): any => {
-  if (isArray(items) || isEmpty(items)) {
+const toFakeItems = (items: Schema | Schema[]): any[] => {
+  if (isEmpty(items)) {
+    return [];
+  }
+  // TODO: handle array items
+  if (isArray(items)) {
     return [];
   }
 
@@ -38,19 +55,18 @@ const generateItems = (items: Schema | Schema[]): any => {
     return items.example;
   }
 
-  if (items.type === "array") {
-    return items.items && [generateItems(items.items)];
+  if (items.items) {
+    return [toFakeItems(items.items)];
   }
 
   if (items.type === "object") {
-    return getFaker(items);
+    return toFakeObj(items);
   }
 
-  return [generateFakeDataByType(items.type as any, items.example)];
+  return [toFakeDataByType(items.type)];
 };
 
-// TODO: File is not a standard type in swagger v2
-export const generateFakeDataByType = (type: TParameterType, example?: any) => {
+export const toFakeDataByType = (type?: TParameterType, example?: any) => {
   if (example) {
     return example;
   }
