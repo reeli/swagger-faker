@@ -1,5 +1,5 @@
 import { Schema } from "swagger-schema-official";
-import { isArray, isEmpty, mapValues } from "lodash";
+import { isArray, isEmpty, map, mapValues } from "lodash";
 import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } from "./generators";
 
 type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "object" | "file";
@@ -46,9 +46,9 @@ const toFakeItems = (items: Schema | Schema[]): any[] => {
   if (isEmpty(items)) {
     return [];
   }
-  // TODO: handle array items
+
   if (isArray(items)) {
-    return [];
+    return map(items, (item) => toFakeDataByType(item.type));
   }
 
   if (items.example) {
@@ -56,7 +56,7 @@ const toFakeItems = (items: Schema | Schema[]): any[] => {
   }
 
   if (items.items) {
-    return [toFakeItems(items.items)];
+    return isArray(items.items) ? toFakeItems(items.items) : [toFakeItems(items.items)];
   }
 
   if (items.type === "object") {
@@ -70,6 +70,7 @@ const toFakeDataByType = (type?: TParameterType, example?: any) => {
   if (example) {
     return example;
   }
+
   switch (type) {
     case "boolean":
       return booleanGenerator();

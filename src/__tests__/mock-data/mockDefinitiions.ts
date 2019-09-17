@@ -191,4 +191,20 @@ export const mockDefinitions = {
     },
     title: "ErrorInfo",
   },
+  Location: {
+    type: "object",
+    properties: {
+      address: {
+        type: "array",
+        items: [
+          {
+            type: "string",
+          },
+          {
+            type: "integer",
+          },
+        ],
+      },
+    },
+  },
 } as any;
