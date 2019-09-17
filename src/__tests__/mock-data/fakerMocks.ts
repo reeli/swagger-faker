@@ -114,5 +114,6 @@ export const fakerExpectedValue = {
   },
   Location: {
     address: ["string words", 123],
+    doorNumber: 10,
   },
 };

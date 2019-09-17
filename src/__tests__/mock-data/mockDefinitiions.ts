@@ -205,6 +205,11 @@ export const mockDefinitions = {
           },
         ],
       },
+      doorNumber: {
+        type: "number",
+        maximum: 100,
+        minimum: 10,
+      },
     },
   },
 } as any;

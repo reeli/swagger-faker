@@ -8,7 +8,18 @@ describe("faker", () => {
       return {
         random: {
           words: () => "string words",
-          number: () => 123,
+          number: ({ min, max }: { min?: number; max?: number }) => {
+            if (min && max) {
+              return min;
+            }
+            if (min) {
+              return min;
+            }
+            if (max) {
+              return max;
+            }
+            return 123;
+          },
           boolean: () => true,
         },
         system: {
