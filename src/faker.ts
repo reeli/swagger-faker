@@ -7,8 +7,6 @@ type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "o
 export const toFaker = (data: { [definitionsName: string]: Omit<Schema, "$ref"> }) =>
   mapValues(data, (item) => toFakeObj(item));
 
-// TODO: handle enums
-
 export const toFakeObj = (schema: Schema = {}): any => {
   let results = {};
   const getFakeProperties = (properties: Schema) => {
@@ -74,7 +72,7 @@ const toFakeProp = (item: Schema, example?: any) => {
     case "boolean":
       return booleanGenerator();
     case "string":
-      return stringGenerator();
+      return stringGenerator(item.enum);
     case "number":
     case "integer":
       return numberGenerator(item.maximum, item.minimum);
