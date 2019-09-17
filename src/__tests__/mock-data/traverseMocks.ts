@@ -352,6 +352,11 @@ export const traverseExpectedValue = {
           },
         ],
       },
+      doorNumber: {
+        type: "number",
+        maximum: 100,
+        minimum: 10,
+      },
     },
   },
 };

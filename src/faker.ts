@@ -7,7 +7,6 @@ type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "o
 export const toFaker = (data: { [definitionsName: string]: Omit<Schema, "$ref"> }) =>
   mapValues(data, (item) => toFakeObj(item));
 
-// TODO: handle number maximal and minimal
 // TODO: handle enums
 
 export const toFakeObj = (schema: Schema = {}): any => {
@@ -20,7 +19,7 @@ export const toFakeObj = (schema: Schema = {}): any => {
         case "array":
           return toFakeItems(property);
         default:
-          return toFakeDataByType(property.type as TParameterType, property.example);
+          return toFakeProp(property, property.example);
       }
     });
   };
@@ -48,7 +47,7 @@ const toFakeItems = (items: Schema | Schema[]): any[] => {
   }
 
   if (isArray(items)) {
-    return map(items, (item) => toFakeDataByType(item.type));
+    return map(items, (item) => toFakeProp(item));
   }
 
   if (items.example) {
@@ -63,22 +62,22 @@ const toFakeItems = (items: Schema | Schema[]): any[] => {
     return toFakeObj(items);
   }
 
-  return [toFakeDataByType(items.type)];
+  return [toFakeProp(items)];
 };
 
-const toFakeDataByType = (type?: TParameterType, example?: any) => {
+const toFakeProp = (item: Schema, example?: any) => {
   if (example) {
     return example;
   }
 
-  switch (type) {
+  switch (item.type as TParameterType) {
     case "boolean":
       return booleanGenerator();
     case "string":
       return stringGenerator();
     case "number":
     case "integer":
-      return numberGenerator();
+      return numberGenerator(item.maximum, item.minimum);
     case "file":
       return fileGenerator();
     default:
