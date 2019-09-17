@@ -243,7 +243,9 @@ export const traverseExpectedValue = {
       absolute: {
         type: "boolean",
       },
-      absoluteFile: "string",
+      absoluteFile: {
+        type: "string",
+      },
     },
     title: "File",
   },
@@ -312,7 +314,9 @@ export const traverseExpectedValue = {
             },
           },
           additionalProperties: {
-            test: 123,
+            test: {
+              type: "string",
+            },
           },
           title: "ErrorInfo",
         },
@@ -328,8 +332,26 @@ export const traverseExpectedValue = {
       },
     },
     additionalProperties: {
-      test: 123,
+      test: {
+        type: "string",
+      },
     },
     title: "ErrorInfo",
+  },
+  Location: {
+    type: "object",
+    properties: {
+      address: {
+        type: "array",
+        items: [
+          {
+            type: "string",
+          },
+          {
+            type: "integer",
+          },
+        ],
+      },
+    },
   },
 };

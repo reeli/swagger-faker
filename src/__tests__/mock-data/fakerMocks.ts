@@ -112,4 +112,7 @@ export const fakerExpectedValue = {
     errorMessage: "string words",
     test: "string words",
   },
+  Location: {
+    address: ["string words", 123],
+  },
 };

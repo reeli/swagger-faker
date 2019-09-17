@@ -1,5 +1,5 @@
 import { Schema } from "swagger-schema-official";
-import { Dictionary, isArray, mapValues } from "lodash";
+import { Dictionary, isArray, map, mapValues } from "lodash";
 import { pickRefKey } from "./utils";
 
 type TDefinitions = { [definitionsName: string]: Schema };
@@ -53,10 +53,12 @@ export class Traverse {
     return this.resolveDefinition(this.definitions[refKey]);
   };
 
-  handleItems = (items: Schema | Schema[]): Schema => {
+  handleItems = (items: Schema | Schema[]): Schema | Schema[] => {
     if (isArray(items)) {
-      // TODO: handle the case when items === "array"
-      return {};
+      return map(items, (item) => {
+        const refKey = pickRefKey(item.$ref);
+        return refKey ? this.resolveDefinition(this.definitions[refKey]) : item;
+      });
     }
 
     if (items.items) {
