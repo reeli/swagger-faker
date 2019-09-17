@@ -4,7 +4,7 @@ import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } fro
 
 type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "object" | "file";
 
-export const getAllFaker = (data: { [definitionsName: string]: Omit<Schema, "$ref"> }) =>
+export const toFaker = (data: { [definitionsName: string]: Omit<Schema, "$ref"> }) =>
   mapValues(data, (item) => toFakeObj(item));
 
 // TODO: handle number maximal and minimal
@@ -66,7 +66,7 @@ const toFakeItems = (items: Schema | Schema[]): any[] => {
   return [toFakeDataByType(items.type)];
 };
 
-export const toFakeDataByType = (type?: TParameterType, example?: any) => {
+const toFakeDataByType = (type?: TParameterType, example?: any) => {
   if (example) {
     return example;
   }

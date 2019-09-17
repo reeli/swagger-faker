@@ -23,8 +23,8 @@ describe("faker", () => {
   });
 
   it("should get correct fake data", () => {
-    const { getAllFaker } = require("../faker");
+    const { toFaker } = require("../faker");
     const data = Traverse.of(mockDefinitions).traverse();
-    expect(getAllFaker(data)).toEqual(fakerExpectedValue);
+    expect(toFaker(data)).toEqual(fakerExpectedValue);
   });
 });
