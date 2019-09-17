@@ -210,6 +210,10 @@ export const mockDefinitions = {
         maximum: 100,
         minimum: 10,
       },
+      street: {
+        type: "string",
+        enum: ["HuaFu Avenue"],
+      },
     },
   },
 } as any;
