@@ -13,14 +13,7 @@ export const getSpec = () => {
 export function printExamples(operationId?: string) {
   const spec = getSpec();
   if (spec.definitions) {
-    const data = Traverse.of(spec.definitions, {
-      resolveRef: (next) => (refKey) => {
-        if (refKey === "File") {
-          return "string";
-        }
-        return next();
-      },
-    }).traverse();
+    const data = Traverse.of(spec.definitions).traverse();
 
     if (!fs.existsSync(".output")) {
       fs.mkdirSync(".output");

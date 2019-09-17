@@ -748,13 +748,13 @@
           "type": "boolean"
         },
         "absoluteFile": {
-          "$ref": "#/definitions/File"
+          "type": "string"
         },
         "absolutePath": {
           "type": "string"
         },
         "canonicalFile": {
-          "$ref": "#/definitions/File"
+          "type": "string"
         },
         "canonicalPath": {
           "type": "string"
@@ -786,7 +786,7 @@
           "type": "string"
         },
         "parentFile": {
-          "$ref": "#/definitions/File"
+          "type": "string"
         },
         "path": {
           "type": "string"
