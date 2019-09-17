@@ -3,90 +3,70 @@ import { Dictionary, isArray, mapValues } from "lodash";
 import { pickRefKey } from "./utils";
 
 type TDefinitions = { [definitionsName: string]: Schema };
-type TProperties = { [propertyName: string]: Schema };
 
 type TResolvedSchema = Omit<Schema, "properties"> & { properties: Dictionary<any> };
 
-interface ITraverseOptions {
-  resolveRef: (next: () => Schema | TResolvedSchema) => (refKey: string, property: Schema) => any;
-}
-
 export class Traverse {
-  static of(definitions: TDefinitions, options?: ITraverseOptions) {
-    return new Traverse(definitions, options);
+  static of(definitions: TDefinitions) {
+    return new Traverse(definitions);
   }
 
-  constructor(private definitions: TDefinitions, private options?: ITraverseOptions) {}
+  constructor(private definitions: TDefinitions) {}
 
   traverse = () => mapValues(this.definitions, (definition) => this.resolveDefinition(definition));
 
   resolveDefinition = (definition: Schema = {}): Schema | TResolvedSchema => {
-    // TODO: handle definition.additionalProperties
     if (definition.properties) {
       return {
         ...definition,
-        properties: this.replaceRef(definition.properties!),
+        properties: mapValues<Schema>(definition.properties, (property: Schema) => this.replaceRef(property)),
       };
     }
+
+    if (definition.additionalProperties) {
+      return {
+        ...definition,
+        properties: this.replaceRef(definition.additionalProperties),
+      };
+    }
+
     return definition;
   };
 
-  replaceRef = (properties: TProperties) =>
-    mapValues<Schema>(properties, (property: Schema) => {
-      if (property.$ref) {
-        return this.handleRef(property);
-      }
+  replaceRef = (property: Schema) => {
+    if (property.$ref) {
+      return this.handleRef(property);
+    }
 
-      if (property.type === "array") {
-        return this.handleArray(property);
-      }
+    if (property.type === "array") {
+      return {
+        ...property,
+        items: this.handleItems(property.items!),
+      };
+    }
 
-      return property;
-    });
+    return property;
+  };
 
   handleRef = (property: Schema) => {
     const refKey = pickRefKey(property.$ref!);
-    const next = () => this.resolveDefinition(this.definitions[refKey]);
-    if (this.options && this.options.resolveRef) {
-      return this.options.resolveRef(next)(refKey, property);
-    }
-
-    return next();
+    return this.resolveDefinition(this.definitions[refKey]);
   };
 
-  handleArray = (property: Schema) => {
-    if (property.items) {
-      if (isArray(property.items)) {
-        return {
-          ...property,
-          items: this.handleArrayItems(property.items),
-        };
-      }
+  handleItems = (items: Schema | Schema[]): Schema => {
+    if (isArray(items)) {
+      // TODO: handle the case when items === "array"
+      return {};
+    }
 
+    if (items.items) {
       return {
-        ...property,
-        items: this.handleItems(property.items),
+        ...items,
+        items: this.handleItems(items.items),
       };
-    }
-  };
-
-  // TODO: handle the case when items === "array"
-  handleArrayItems = (_: Schema[]) => {};
-
-  handleItems = (items: Schema) => {
-    // TODO: handle items.$ref
-
-    if (!items.$ref) {
-      return;
     }
 
     const refKey = pickRefKey(items.$ref);
-    const next = () => this.resolveDefinition(this.definitions[refKey]);
-
-    if (this.options && this.options.resolveRef) {
-      return this.options.resolveRef(next)(refKey, items);
-    }
-
-    return next();
+    return refKey ? this.resolveDefinition(this.definitions[refKey]) : items;
   };
 }
