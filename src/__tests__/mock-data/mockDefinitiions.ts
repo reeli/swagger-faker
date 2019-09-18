@@ -196,6 +196,7 @@ export const mockDefinitions = {
     properties: {
       address: {
         type: "array",
+        example: ["test", 123],
         items: [
           {
             type: "string",
