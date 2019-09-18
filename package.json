@@ -8,7 +8,7 @@
     "README.md"
   ],
   "scripts": {
-    "start": " ts-node examples/setMockData.ts",
+    "start": " ts-node examples/fakerGen.ts",
     "test": "jest",
     "build": "rm -rf dist/ && tsc",
     "prepare": "npm run build && npm test"
@@ -30,6 +30,7 @@
     "@babel/preset-typescript": "7.3.3",
     "@babel/traverse": "7.5.5",
     "@babel/types": "7.5.5",
+    "@ts-tool/ts-codegen": "0.7.1",
     "@types/axios": "0.14.0",
     "@types/faker": "4.1.5",
     "@types/jest": "24.0.15",

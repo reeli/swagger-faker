@@ -1,53 +1,62 @@
-import * as fs from "fs";
-import { Spec } from "swagger-schema-official";
+import { Operation, Schema, Spec } from "swagger-schema-official";
 import { Traverse } from "./traverse";
-import { toFaker, toFakeObj } from "./faker";
-import { forEach, get, pick } from "lodash";
+import { toFaker } from "./faker";
+import { find, forEach, get, mapKeys, pick } from "lodash";
 import { pickRefKey } from "./utils";
+import { PathResolver } from "@ts-tool/ts-codegen";
 
-export const getSpec = () => {
-  const schemaStr = fs.readFileSync("./examples/swagger.json", "utf8");
-  return JSON.parse(schemaStr) as Spec;
-};
-
-export function printExamples(operationId?: string) {
-  const spec = getSpec();
-  if (spec.definitions) {
-    const data = Traverse.of(spec.definitions).traverse();
-
-    if (!fs.existsSync(".output")) {
-      fs.mkdirSync(".output");
-    }
-
-    fs.writeFileSync("./.output/test.json", JSON.stringify(data, null, 2), "utf-8");
-
-    if (operationId) {
-      fs.writeFileSync(`./.output/${operationId}.json`, JSON.stringify(toFakeObj(data[operationId]), null, 2), "utf-8");
-    } else {
-      fs.writeFileSync(`./.output/mock-data.json`, JSON.stringify(toFaker(data), null, 2), "utf-8");
-    }
+export function generateFakerByDefinitions(definitions: { [definitionsName: string]: Schema }) {
+  if (definitions) {
+    const data = Traverse.of(definitions).traverse();
+    return toFaker(data);
   }
+  console.error("You must input definitions!");
+  return {};
 }
 
-export const getResponseByOperationId = (spec: Spec, operationId: string) => {
-  let res = null;
-  forEach(spec.paths, (path, pathName) => {
+const getPath = (pathName: string, basePath?: string) => {
+  const subPath = pathName.replace(/\{/g, ":").replace(/\}/g, "");
+  return pathName ? `${basePath}${subPath}` : subPath;
+};
+
+const getResponse = (operation: Operation) => {
+  const refKey = get(operation, "responses.200.schema.$ref") || get(operation, "responses.201.schema.$ref");
+  return pickRefKey(refKey);
+};
+
+const getResolvedPathByOperationId = (swagger: Spec, operationId: string) => {
+  const resolvedPaths = PathResolver.of(swagger.paths, swagger.basePath).resolve().resolvedPaths;
+  return find(resolvedPaths, (item) => item.operationId === operationId);
+};
+
+type TMethod = "get" | "post" | "put" | "delete" | "patch" | "options" | "head";
+
+interface IRequest {
+  path: string;
+  method: TMethod;
+  response: string;
+  queryParams: string[];
+  basePath: string;
+}
+
+export const getRequestByOperationId = (swagger: Spec, operationId: string): IRequest | null => {
+  const resolvedPath = getResolvedPathByOperationId(swagger, operationId);
+  let request = null;
+
+  forEach(swagger.paths, (path, pathName) => {
     const operations = pick(path, ["get", "post", "put", "delete", "patch", "options", "head"]);
-    Object.keys(operations).map((method) => {
-      // TODO: remove any
-      if ((path as any)[method].operationId === operationId) {
-        const p = pathName.replace(/\{/g, ":").replace(/\}/g, "");
-        res = {
-          path: spec.basePath ? `${spec.basePath}${p}` : p,
+    mapKeys(operations, (operation, method) => {
+      if (operation && operation.operationId === operationId) {
+        request = {
+          path: getPath(pathName, swagger.basePath),
           method,
-          responses: {
-            200: pickRefKey(get((path as any)[method], "responses.200.schema.$ref")),
-            201: pickRefKey(get((path as any)[method], "responses.201.schema.$ref")),
-          },
-          operationId,
+          response: getResponse(operation),
+          queryParams: resolvedPath ? resolvedPath.queryParams : [],
+          basePath: swagger.basePath,
         };
       }
     });
   });
-  return res;
+
+  return request;
 };
