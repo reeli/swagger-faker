@@ -19,41 +19,41 @@ export class Traverse {
     if (definition.properties) {
       return {
         ...definition,
-        properties: mapValues<Schema>(definition.properties, (property: Schema) => this.replaceRef(property)),
+        properties: mapValues<Schema>(definition.properties, (schema: Schema) => this.handleRef(schema)),
       };
     }
 
     if (definition.additionalProperties) {
       return {
         ...definition,
-        properties: this.replaceRef(definition.additionalProperties),
+        properties: this.handleRef(definition.additionalProperties),
       };
     }
 
     return definition;
   };
 
-  replaceRef = (property: Schema) => {
-    if (property.$ref) {
-      return this.handleRef(property);
+  handleRef = (schema: Schema) => {
+    if (schema.$ref) {
+      return this.replaceRefInSchema(schema);
     }
 
-    if (property.type === "array") {
+    if (schema.type === "array") {
       return {
-        ...property,
-        items: this.handleItems(property.items!),
+        ...schema,
+        items: this.replaceRefInItems(schema.items!),
       };
     }
 
-    return property;
+    return schema;
   };
 
-  handleRef = (property: Schema) => {
-    const refKey = pickRefKey(property.$ref!);
+  replaceRefInSchema = (schema: Schema) => {
+    const refKey = pickRefKey(schema.$ref!);
     return this.resolveDefinition(this.definitions[refKey]);
   };
 
-  handleItems = (items: Schema | Schema[]): Schema | Schema[] => {
+  replaceRefInItems = (items: Schema | Schema[]): Schema | Schema[] => {
     if (isArray(items)) {
       return map(items, (item) => {
         const refKey = pickRefKey(item.$ref);
@@ -64,7 +64,7 @@ export class Traverse {
     if (items.items) {
       return {
         ...items,
-        items: this.handleItems(items.items),
+        items: this.replaceRefInItems(items.items),
       };
     }
 
