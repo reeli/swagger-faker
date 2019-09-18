@@ -15,7 +15,7 @@ export const toFakeObj = (schema: Schema = {}): any => {
         case "object":
           return toFakeObj(property);
         case "array":
-          return toFakeItems(property);
+          return toFakeItems(property, property.example);
         default:
           return toFakeProp(property, property.example);
       }
@@ -39,7 +39,11 @@ export const toFakeObj = (schema: Schema = {}): any => {
   return results;
 };
 
-const toFakeItems = (items: Schema | Schema[]): any[] => {
+const toFakeItems = (items: Schema | Schema[], example?: any): any[] => {
+  if (example) {
+    return example;
+  }
+
   if (isEmpty(items)) {
     return [];
   }
@@ -48,12 +52,8 @@ const toFakeItems = (items: Schema | Schema[]): any[] => {
     return map(items, (item) => toFakeProp(item));
   }
 
-  if (items.example) {
-    return items.example;
-  }
-
   if (items.items) {
-    return isArray(items.items) ? toFakeItems(items.items) : [toFakeItems(items.items)];
+    return isArray(items.items) ? toFakeItems(items.items, items.example) : [toFakeItems(items.items, items.example)];
   }
 
   if (items.type === "object") {

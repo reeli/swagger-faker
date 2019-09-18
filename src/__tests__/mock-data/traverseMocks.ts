@@ -343,6 +343,7 @@ export const traverseExpectedValue = {
     properties: {
       address: {
         type: "array",
+        example: ["test", 123],
         items: [
           {
             type: "string",

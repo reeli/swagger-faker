@@ -113,7 +113,7 @@ export const fakerExpectedValue = {
     test: "string words",
   },
   Location: {
-    address: ["string words", 123],
+    address: ["test", 123],
     doorNumber: 10,
     street: "HuaFu Avenue"
   },
