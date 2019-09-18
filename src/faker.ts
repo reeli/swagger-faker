@@ -1,5 +1,5 @@
 import { Schema } from "swagger-schema-official";
-import { isArray, isEmpty, map, mapValues } from "lodash";
+import { isArray, map, mapValues } from "lodash";
 import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } from "./generators";
 
 type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "object" | "file";
@@ -17,7 +17,7 @@ export const toFakeObj = (schema: Schema = {}): any => {
         case "array":
           return toFakeItems(property, property.example);
         default:
-          return toFakeProp(property, property.example);
+          return toFakeProp(property);
       }
     });
   };
@@ -44,10 +44,6 @@ const toFakeItems = (items: Schema | Schema[], example?: any): any[] => {
     return example;
   }
 
-  if (isEmpty(items)) {
-    return [];
-  }
-
   if (isArray(items)) {
     return map(items, (item) => toFakeProp(item));
   }
@@ -60,22 +56,22 @@ const toFakeItems = (items: Schema | Schema[], example?: any): any[] => {
     return toFakeObj(items);
   }
 
-  return [toFakeProp(items)];
+  return [];
 };
 
-const toFakeProp = (item: Schema, example?: any) => {
-  if (example) {
-    return example;
+const toFakeProp = (schema: Schema) => {
+  if (schema.example) {
+    return schema.example;
   }
 
-  switch (item.type as TParameterType) {
+  switch (schema.type as TParameterType) {
     case "boolean":
       return booleanGenerator();
     case "string":
-      return stringGenerator(item.enum);
+      return stringGenerator(schema.enum);
     case "number":
     case "integer":
-      return numberGenerator(item.maximum, item.minimum);
+      return numberGenerator(schema.maximum, schema.minimum);
     case "file":
       return fileGenerator();
     default:
