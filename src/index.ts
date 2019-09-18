@@ -31,7 +31,7 @@ const getResolvedPathByOperationId = (swagger: Spec, operationId: string) => {
 
 type TMethod = "get" | "post" | "put" | "delete" | "patch" | "options" | "head";
 
-interface IRequest {
+export interface IRequest {
   path: string;
   method: TMethod;
   response: string;
