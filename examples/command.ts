@@ -5,12 +5,8 @@ import { configMockServer } from "./fakerGen";
 
 program.option("-o, --operationId <type>", "operation id").parse(process.argv);
 
-if (!program.operationId) {
-  throw new Error("Please set an operationId!");
-}
-
 const schemaStr = fs.readFileSync("./examples/swagger.json", "utf8");
 const finalSchemaStr = schemaStr.replace(/#\/definitions\/File/gi, "");
 const swagger = JSON.parse(finalSchemaStr) as Spec;
 
-configMockServer(swagger, program.operationId);
+configMockServer(swagger, program.operationId || "uploadAttachmentUsingPOST");

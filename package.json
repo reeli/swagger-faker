@@ -11,7 +11,7 @@
     "README.md"
   ],
   "scripts": {
-    "start": " ts-node examples/fakerGen.ts",
+    "start": "ts-node examples/command.ts",
     "test": "jest",
     "build": "rm -rf dist/ && tsc",
     "release": "npm run build:es5 && npm run build:es6",
