@@ -59,12 +59,13 @@
     "rollup-plugin-typescript": "1.0.x"
   },
   "dependencies": {
-    "@ts-tool/ts-codegen": "0.7.5",
+    "@ts-tool/ts-codegen": "0.7.6",
     "@types/swagger-schema-official": "2.0.x",
     "faker": "4.1.x"
   },
   "peerDependencies": {
-    "lodash": ">=4.17.0"
+    "lodash": ">=4.17.0",
+    "tslib": ">=1.10.0"
   },
   "jest": {
     "testEnvironment": "node",
