@@ -28,7 +28,7 @@ const writeRoutes = (req: IRequest, operationId: string) => {
   fs.writeFileSync(mockServerConfig.routes, JSON.stringify(newRoutes, null, 2));
 };
 
-const configMockServer = (swagger: Spec, operationId: string) => {
+export const configMockServer = (swagger: Spec, operationId: string) => {
   const request = getRequestByOperationId(swagger, operationId);
 
   if (!request) {
@@ -86,9 +86,3 @@ const configMockServer = (swagger: Spec, operationId: string) => {
     fs.writeFileSync(`./${operationId}.js`, prettifyCode(code));
   }
 };
-
-const schemaStr = fs.readFileSync("./examples/swagger.json", "utf8");
-const finalSchemaStr = schemaStr.replace(/#\/definitions\/File/gi, "");
-const swagger = JSON.parse(finalSchemaStr) as Spec;
-
-configMockServer(swagger, "deleteAttachmentUsingDELETE");
