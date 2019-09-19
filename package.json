@@ -2,16 +2,22 @@
   "name": "swagger-faker",
   "version": "0.6.0",
   "description": "Generate fake data from swagger",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
+  "module": "module/index.js",
   "files": [
-    "dist",
+    "lib",
+    "module",
+    "src",
     "README.md"
   ],
   "scripts": {
     "start": " ts-node examples/fakerGen.ts",
     "test": "jest",
     "build": "rm -rf dist/ && tsc",
-    "prepare": "npm run build && npm test"
+    "release": "npm run build:es5 && npm run build:es6",
+    "build:es5": "rm -rf lib && tsc --build ./tsconfig.build.es5.json",
+    "build:es6": "rm -rf module && tsc --build ./tsconfig.build.es6.json",
+    "prepare": "npm run release && npm test"
   },
   "repository": {
     "type": "git",
