@@ -1,6 +1,6 @@
 {
   "name": "swagger-faker",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Generate fake data from swagger",
   "main": "lib/index.js",
   "module": "module/index.js",
