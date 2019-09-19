@@ -59,8 +59,8 @@
     "rollup-plugin-typescript": "1.0.x"
   },
   "dependencies": {
+    "@ts-tool/ts-codegen": "0.7.5",
     "@types/swagger-schema-official": "2.0.x",
-    "@ts-tool/ts-codegen": "0.7.x",
     "faker": "4.1.x"
   },
   "peerDependencies": {
