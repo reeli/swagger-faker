@@ -4,6 +4,7 @@
   "description": "Generate fake data from swagger",
   "main": "lib/index.js",
   "module": "module/index.js",
+  "types": "src/index.ts",
   "files": [
     "lib",
     "module",
