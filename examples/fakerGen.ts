@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Spec } from "swagger-schema-official";
-import { getRequestByOperationId, IRequest } from "../src";
+import { getRequestConfigByOperationId, IRequestConfig } from "../src";
 import { printFaker } from "../src/printer";
 import { getInsertFileStr, prettifyCode } from "./utils";
 import { isEmpty, map ,toUpper} from "lodash";
@@ -15,7 +15,7 @@ const getRoutePath = (basePath: string, path: string, queryParams?: string[]) =>
   return !isEmpty(queryParams) ? `${basePath}${path}?${queryList.join("&")}` : `${basePath}${path}`;
 };
 
-const writeRoutes = (req: IRequest, operationId: string) => {
+const writeRoutes = (req: IRequestConfig, operationId: string) => {
   const routes = fs.readFileSync(mockServerConfig.routes, "utf-8");
   const routesObj = JSON.parse(routes);
   const newRoutes = routesObj[req.path]
@@ -29,7 +29,7 @@ const writeRoutes = (req: IRequest, operationId: string) => {
 };
 
 export const configMockServer = (swagger: Spec, operationId: string) => {
-  const request = getRequestByOperationId(swagger, operationId);
+  const request = getRequestConfigByOperationId(swagger, operationId);
 
   if (!request) {
     return;
@@ -56,7 +56,7 @@ export const configMockServer = (swagger: Spec, operationId: string) => {
     const method = toUpper(request.method);
     const temp1 = `
     const { isMatch } = require("../utils");
-    const SupervisorNoteVO = require("../../.output/${request.response}.json");
+    const ${request.response} = require("../../.output/${request.response}.json");
     
     module.exports = (req, res, next) => {
       if (req.method === "${method}" && isMatch("${routePattern}")(req.path)) {
