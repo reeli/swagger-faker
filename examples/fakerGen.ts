@@ -3,7 +3,7 @@ import { Spec } from "swagger-schema-official";
 import { getRequestByOperationId, IRequest } from "../src";
 import { printFaker } from "../src/printer";
 import { getInsertFileStr, prettifyCode } from "./utils";
-import { isEmpty, map } from "lodash";
+import { isEmpty, map ,toUpper} from "lodash";
 
 const mockServerConfig = {
   db: "./examples/mock-server-config/db.js",
@@ -51,11 +51,44 @@ const configMockServer = (swagger: Spec, operationId: string) => {
     }
   }
 
-  if (request.method === "post") {
+  if (request.method === "post" || request.method === "put" || request.method == "delete") {
+    const routePattern = getRoutePath(request.basePath, request.path, request.queryParams);
+    const method = toUpper(request.method);
+    const temp1 = `
+    const { isMatch } = require("../utils");
+    const SupervisorNoteVO = require("../../.output/${request.response}.json");
+    
+    module.exports = (req, res, next) => {
+      if (req.method === "${method}" && isMatch("${routePattern}")(req.path)) {
+        res.status(200).send(${request.response});
+        return;
+      }
+    
+      next();
+    };
+    `;
+
+    const temp2 = `
+    const { isMatch } = require("../utils");
+    
+    module.exports = (req, res, next) => {
+      if (req.method === "${method}" && isMatch("${routePattern}")(req.path)) {
+        res.status(200).send();
+        return;
+      }
+    
+      next();
+    };
+    `;
+
+    const code = request.response ? temp1 : temp2;
+
+    fs.writeFileSync(`./${operationId}.js`, prettifyCode(code));
   }
 };
 
 const schemaStr = fs.readFileSync("./examples/swagger.json", "utf8");
-const swagger = JSON.parse(schemaStr) as Spec;
+const finalSchemaStr = schemaStr.replace(/#\/definitions\/File/gi, "");
+const swagger = JSON.parse(finalSchemaStr) as Spec;
 
-configMockServer(swagger, "downloadUsingGET");
+configMockServer(swagger, "deleteAttachmentUsingDELETE");

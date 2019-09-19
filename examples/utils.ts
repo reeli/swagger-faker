@@ -3,6 +3,7 @@ import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { transformFromAstSync } from "@babel/core";
+import pathToRegexp from "path-to-regexp";
 
 export const prettifyCode = (code: string) =>
   prettier.format(code, {
@@ -44,4 +45,9 @@ export const getInsertFileStr = (fileStr: string, propName: string) => {
   }
 
   return transformFromAstSync(ast, undefined, { compact: true });
+};
+
+export const isMatch = (routePattern: string) => (routePath: string) => {
+  const regexp = pathToRegexp(routePattern);
+  return !!regexp.exec(routePath);
 };
