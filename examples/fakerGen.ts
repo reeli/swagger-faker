@@ -1,8 +1,7 @@
 import * as fs from "fs";
 import { Spec } from "swagger-schema-official";
 import { getRequestConfigByOperationId, IRequestConfig } from "../src";
-import { printFaker } from "../src/printer";
-import { getInsertFileStr, prettifyCode } from "./utils";
+import {getInsertFileStr, prettifyCode, printFaker} from "./utils";
 import { isEmpty, map ,toUpper} from "lodash";
 
 const mockServerConfig = {
