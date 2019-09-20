@@ -1,3 +1,4 @@
 export * from "./getFakerByDefinitions";
 export * from "./getRequestConfigByOperationId";
-export * from "./printer";
+export * from "./faker";
+export * from "./traverse";
