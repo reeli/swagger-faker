@@ -15,6 +15,9 @@ export class Traverse {
 
   traverse = () => mapValues(this.definitions, (definition) => this.resolveDefinition(definition));
 
+  traverseSpecificDefinition = (specificDefinitionName: string) =>
+    this.resolveDefinition(this.definitions[specificDefinitionName]);
+
   resolveDefinition = (definition: Schema = {}): Schema | TResolvedSchema => {
     if (definition.properties) {
       return {
