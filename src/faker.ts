@@ -1,6 +1,8 @@
-import { Schema } from "swagger-schema-official";
-import { isArray, map, mapValues } from "lodash";
+import { Reference, Response, Schema, Spec } from "swagger-schema-official";
+import { get, isArray, map, mapValues } from "lodash";
 import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } from "./generators";
+import { pickRefKey } from "./utils";
+import { Traverse } from "./traverse";
 
 type TParameterType = "string" | "number" | "integer" | "boolean" | "array" | "object" | "file";
 
@@ -80,5 +82,45 @@ const toFakeProp = (schema: Schema) => {
       return fileGenerator();
     default:
       return "";
+  }
+};
+
+export const getFakeData = (spec: Spec, response: Response | Reference) => {
+  const $ref = get(response, "$ref");
+  if ($ref && spec.definitions) {
+    const refKey = pickRefKey($ref);
+    return toFakeObj(spec.definitions[refKey]);
+  }
+
+  if (!response) {
+    return {};
+  }
+
+  const { examples, schema } = response as Response;
+
+  if (examples) {
+    return examples;
+  }
+
+  if (!spec.definitions || !schema) {
+    return {};
+  }
+
+  const schemaWithoutRef = Traverse.of(spec.definitions).handleRef(schema);
+
+  switch (schemaWithoutRef.type) {
+    case "array":
+      return schemaWithoutRef.items ? toFakeItems(schemaWithoutRef) : {};
+    case "object":
+      return toFakeObj(schemaWithoutRef);
+    case "string":
+      return stringGenerator();
+    case "boolean":
+      return booleanGenerator();
+    case "number":
+    case "integer":
+      return numberGenerator();
+    default:
+      return {};
   }
 };
