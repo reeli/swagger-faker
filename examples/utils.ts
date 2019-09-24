@@ -5,7 +5,6 @@ import * as t from "@babel/types";
 import { transformFromAstSync } from "@babel/core";
 import { Spec } from "swagger-schema-official";
 import * as fs from "fs";
-import { uniqueId } from "lodash";
 import pathToRegexp from "path-to-regexp";
 
 export const prettifyCode = (code: string) =>
@@ -13,7 +12,7 @@ export const prettifyCode = (code: string) =>
     printWidth: 120,
     trailingComma: "all",
     arrowParens: "always",
-    parser: "typescript",
+    parser: "babel",
   });
 
 export const getInsertFileStr = (fileStr: string, propName: string) => {
@@ -58,11 +57,7 @@ export function printFaker(spec: Spec, response: any, fileName?: string, outputF
       fs.mkdirSync(outputFolderName);
     }
 
-    if (fileName) {
-      fs.writeFileSync(`${outputFolderName}/${fileName}.success.json`, fakeDataStr, "utf-8");
-    } else {
-      fs.writeFileSync(`${uniqueId("response")}.json`, fakeDataStr, "utf-8");
-    }
+    fs.writeFileSync(`${outputFolderName}/${fileName}.json`, fakeDataStr, "utf-8");
   }
 }
 
