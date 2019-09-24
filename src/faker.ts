@@ -56,7 +56,11 @@ export const toFakeItems = (items: Schema | Schema[], example?: any): any[] => {
     return toFakeObj(items);
   }
 
-  return [];
+  return toFakeProp({
+    type: items.type,
+    items,
+    example,
+  });
 };
 
 const toFakeProp = (schema: Schema) => {
