@@ -1,8 +1,8 @@
 # Swagger Faker
 
-Generate fake data from swagger.
+Swagger Faker is a tool which can help you generate fake data from your swagger.json file.
 
-## Convert Swagger to Fake Data
+## How to Use
 
 Example Swagger.json
 
@@ -66,7 +66,10 @@ Example Swagger.json
 We can get mock data by passing the swagger and operationId(findPetsByStatus):
 
 ```js
+import { getRequestConfigByOperationId } from "swagger-faker";
+
 const request = getRequestConfigByOperationId(swagger, "findPetsByStatus");
+
 console.log(request);
 ```
 
