@@ -3,10 +3,7 @@ import { find, forEach, get, mapKeys, pick } from "lodash";
 import { pickRefKey } from "./utils";
 import { PathResolver } from "@ts-tool/ts-codegen";
 
-const getPath = (pathName: string, basePath?: string) => {
-  const subPath = pathName.replace(/\{/g, ":").replace(/\}/g, "");
-  return pathName ? `${basePath}${subPath}` : subPath;
-};
+const getPath = (pathName: string) => pathName.replace(/\{/g, ":").replace(/\}/g, "");
 
 export interface IResponse {
   schema: {
@@ -111,11 +108,11 @@ export const getRequestConfigByOperationId = (swagger: Spec, operationId: string
     mapKeys(operations, (operation, method) => {
       if (operation && operation.operationId === operationId) {
         request = {
-          path: getPath(pathName, swagger.basePath),
+          path: getPath(pathName),
+          basePath: swagger.basePath,
           method,
           response: getResponse(operation),
           queryParams: resolvedPath ? resolvedPath.queryParams : [],
-          basePath: swagger.basePath,
         };
       }
     });
