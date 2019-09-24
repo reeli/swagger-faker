@@ -39,7 +39,7 @@ export const toFakeObj = (schema: Schema = {}): any => {
   return results;
 };
 
-const toFakeItems = (items: Schema | Schema[], example?: any): any[] => {
+export const toFakeItems = (items: Schema | Schema[], example?: any): any[] => {
   if (example) {
     return example;
   }
