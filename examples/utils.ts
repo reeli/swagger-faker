@@ -3,13 +3,10 @@ import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { transformFromAstSync } from "@babel/core";
-import pathToRegexp from "path-to-regexp";
-import { Reference, Response, Spec } from "swagger-schema-official";
+import { Spec } from "swagger-schema-official";
 import * as fs from "fs";
-import { toFakeItems, toFakeObj, Traverse } from "../src";
-import { pickRefKey } from "../src/utils";
-import { get, uniqueId } from "lodash";
-import { booleanGenerator, numberGenerator, stringGenerator } from "../src/generators";
+import { uniqueId } from "lodash";
+import pathToRegexp from "path-to-regexp";
 
 export const prettifyCode = (code: string) =>
   prettier.format(code, {
@@ -53,56 +50,9 @@ export const getInsertFileStr = (fileStr: string, propName: string) => {
   return transformFromAstSync(ast, undefined, { compact: true });
 };
 
-export const isMatch = (routePattern: string) => (routePath: string) => {
-  const regexp = pathToRegexp(routePattern);
-  return !!regexp.exec(routePath);
-};
-
-const getFakeData = (spec: Spec, response: Response | Reference) => {
-  const $ref = get(response, "$ref");
-  if ($ref && spec.definitions) {
-    const refKey = pickRefKey($ref);
-    return toFakeObj(spec.definitions[refKey]);
-  }
-
-  const { examples, schema } = response as Response;
-
-  if (examples) {
-    return examples;
-  }
-
-  if (!spec.definitions || !schema) {
-    return {};
-  }
-
-  const schemaWithoutRef = Traverse.of(spec.definitions).handleRef(schema);
-
-  switch (schemaWithoutRef.type) {
-    case "array":
-      return schemaWithoutRef.items ? toFakeItems(schemaWithoutRef) : {};
-    case "object":
-      return toFakeObj(schemaWithoutRef);
-    case "string":
-      return stringGenerator();
-    case "boolean":
-      return booleanGenerator();
-    case "number":
-    case "integer":
-      return numberGenerator();
-    default:
-      return {};
-  }
-};
-
-export function printFaker(
-  spec: Spec,
-  response: Response | Reference,
-  fileName?: string,
-  outputFolderName = ".output",
-) {
+export function printFaker(spec: Spec, response: any, fileName?: string, outputFolderName = ".output") {
   if (spec.definitions) {
-    const fakeData = getFakeData(spec, response);
-    const fakeDataStr = JSON.stringify(fakeData, null, 2);
+    const fakeDataStr = JSON.stringify(response, null, 2);
 
     if (!fs.existsSync(outputFolderName)) {
       fs.mkdirSync(outputFolderName);
@@ -115,3 +65,8 @@ export function printFaker(
     }
   }
 }
+
+export const isMatch = (routePattern: string) => (routePath: string) => {
+  const regexp = pathToRegexp(routePattern);
+  return !!regexp.exec(routePath);
+};

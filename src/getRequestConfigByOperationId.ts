@@ -1,6 +1,10 @@
 import { Operation, Reference, Response, Spec } from "swagger-schema-official";
 import { find, forEach, get, mapKeys, pick } from "lodash";
 import { PathResolver } from "@ts-tool/ts-codegen";
+import { pickRefKey } from "./utils";
+import { toFakeItems, toFakeObj } from "./faker";
+import { Traverse } from "./traverse";
+import { booleanGenerator, numberGenerator, stringGenerator } from "./generators";
 
 const getPath = (pathName: string) => pathName.replace(/\{/g, ":").replace(/\}/g, "");
 
@@ -26,10 +30,46 @@ type TMethod = "get" | "post" | "put" | "delete" | "patch" | "options" | "head";
 export interface IRequestConfig {
   path: string;
   method: TMethod;
-  response: Response | Reference;
+  response: any;
   queryParams: string[];
   basePath: string;
 }
+
+const getFakeData = (spec: Spec, response: Response | Reference) => {
+  const $ref = get(response, "$ref");
+  if ($ref && spec.definitions) {
+    const refKey = pickRefKey($ref);
+    return toFakeObj(spec.definitions[refKey]);
+  }
+
+  const { examples, schema } = response as Response;
+
+  if (examples) {
+    return examples;
+  }
+
+  if (!spec.definitions || !schema) {
+    return {};
+  }
+
+  const schemaWithoutRef = Traverse.of(spec.definitions).handleRef(schema);
+
+  switch (schemaWithoutRef.type) {
+    case "array":
+      return schemaWithoutRef.items ? toFakeItems(schemaWithoutRef) : {};
+    case "object":
+      return toFakeObj(schemaWithoutRef);
+    case "string":
+      return stringGenerator();
+    case "boolean":
+      return booleanGenerator();
+    case "number":
+    case "integer":
+      return numberGenerator();
+    default:
+      return {};
+  }
+};
 
 export const getRequestConfigByOperationId = (swagger: Spec, operationId: string): IRequestConfig | null => {
   const resolvedPath = getResolvedPathByOperationId(swagger, operationId);
@@ -43,7 +83,7 @@ export const getRequestConfigByOperationId = (swagger: Spec, operationId: string
           path: getPath(pathName),
           basePath: swagger.basePath,
           method,
-          response: getResponse(operation),
+          response: getFakeData(swagger, getResponse(operation)),
           queryParams: resolvedPath ? resolvedPath.queryParams : [],
         };
       }
