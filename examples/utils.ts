@@ -5,9 +5,10 @@ import * as t from "@babel/types";
 import { transformFromAstSync } from "@babel/core";
 import pathToRegexp from "path-to-regexp";
 import { Spec } from "swagger-schema-official";
-import { Traverse } from "../src/traverse";
+import { IResponse, toFaker, Traverse } from "../src";
 import * as fs from "fs";
-import { toFaker } from "../src/faker";
+import { booleanGenerator, numberGenerator, stringGenerator } from "../src/generators";
+import { uniqueId } from "lodash";
 
 export const prettifyCode = (code: string) =>
   prettier.format(code, {
@@ -56,23 +57,54 @@ export const isMatch = (routePattern: string) => (routePath: string) => {
   return !!regexp.exec(routePath);
 };
 
-export function printFaker(spec: Spec, definitionName?: string, outputFolderName = ".output") {
-  if (spec.definitions) {
+const getFakeData = (spec: Spec, response: IResponse) => {
+  if (response.examples) {
+    return response.examples;
+  }
+
+  if (!spec.definitions) {
+    return {};
+  }
+
+  if (response.schema.refKey && !response.schema.type) {
     const data = Traverse.of(spec.definitions).traverse();
+    return toFaker(data)[response.schema.refKey];
+  }
+
+  switch (response.schema.type) {
+    case "array":
+      const data = Traverse.of(spec.definitions).traverse();
+      return [toFaker(data)[response.schema.refKey!]];
+    case "object":
+      return {};
+    case "string":
+      return stringGenerator();
+    case "boolean":
+      return booleanGenerator();
+    case "integer":
+    case "number":
+      return numberGenerator();
+    default:
+      return {};
+  }
+};
+
+export function printFaker(spec: Spec, response: IResponse, outputFolderName = ".output") {
+  if (spec.definitions) {
+    const fakeData = getFakeData(spec, response);
 
     if (!fs.existsSync(outputFolderName)) {
       fs.mkdirSync(outputFolderName);
     }
 
-    const faker = toFaker(data);
-    if (definitionName) {
+    if (response.schema.refKey) {
       fs.writeFileSync(
-        `${outputFolderName}/${definitionName}.json`,
-        JSON.stringify(faker[definitionName], null, 2),
+        `${outputFolderName}/${response.schema.refKey}.json`,
+        JSON.stringify(fakeData, null, 2),
         "utf-8",
       );
     } else {
-      fs.writeFileSync(`${outputFolderName}/${spec.basePath}.json`, JSON.stringify(faker, null, 2), "utf-8");
+      fs.writeFileSync(`${uniqueId("response")}.json`, JSON.stringify(fakeData, null, 2), "utf-8");
     }
   }
 }
