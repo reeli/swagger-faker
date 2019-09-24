@@ -35,7 +35,7 @@ export const configMockServer = (swagger: Spec, operationId: string) => {
   }
 
   if (request.response) {
-    printFaker(swagger, request.response);
+    printFaker(swagger, request.response, `${operationId}.${request.method}`);
   }
 
   if (request.method === "get") {

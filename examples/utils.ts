@@ -4,11 +4,12 @@ import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { transformFromAstSync } from "@babel/core";
 import pathToRegexp from "path-to-regexp";
-import { Spec } from "swagger-schema-official";
-import { IResponse, toFaker, Traverse } from "../src";
+import { Reference, Response, Spec } from "swagger-schema-official";
 import * as fs from "fs";
+import { toFakeItems, toFakeObj, Traverse } from "../src";
+import { pickRefKey } from "../src/utils";
+import { get, uniqueId } from "lodash";
 import { booleanGenerator, numberGenerator, stringGenerator } from "../src/generators";
-import { uniqueId } from "lodash";
 
 export const prettifyCode = (code: string) =>
   prettier.format(code, {
@@ -57,54 +58,60 @@ export const isMatch = (routePattern: string) => (routePath: string) => {
   return !!regexp.exec(routePath);
 };
 
-const getFakeData = (spec: Spec, response: IResponse) => {
-  if (response.examples) {
-    return response.examples;
+const getFakeData = (spec: Spec, response: Response | Reference) => {
+  const $ref = get(response, "$ref");
+  if ($ref && spec.definitions) {
+    const refKey = pickRefKey($ref);
+    return toFakeObj(spec.definitions[refKey]);
   }
 
-  if (!spec.definitions) {
+  const { examples, schema } = response as Response;
+
+  if (examples) {
+    return examples;
+  }
+
+  if (!spec.definitions || !schema) {
     return {};
   }
 
-  if (response.schema.refKey && !response.schema.type) {
-    const data = Traverse.of(spec.definitions).traverse();
-    return toFaker(data)[response.schema.refKey];
-  }
+  const schemaWithoutRef = Traverse.of(spec.definitions).handleRef(schema);
 
-  switch (response.schema.type) {
+  switch (schemaWithoutRef.type) {
     case "array":
-      const data = Traverse.of(spec.definitions).traverse();
-      return [toFaker(data)[response.schema.refKey!]];
+      return schemaWithoutRef.items ? toFakeItems(schemaWithoutRef) : {};
     case "object":
-      return {};
+      return toFakeObj(schemaWithoutRef);
     case "string":
       return stringGenerator();
     case "boolean":
       return booleanGenerator();
-    case "integer":
     case "number":
+    case "integer":
       return numberGenerator();
     default:
       return {};
   }
 };
 
-export function printFaker(spec: Spec, response: IResponse, outputFolderName = ".output") {
+export function printFaker(
+  spec: Spec,
+  response: Response | Reference,
+  fileName?: string,
+  outputFolderName = ".output",
+) {
   if (spec.definitions) {
     const fakeData = getFakeData(spec, response);
+    const fakeDataStr = JSON.stringify(fakeData, null, 2);
 
     if (!fs.existsSync(outputFolderName)) {
       fs.mkdirSync(outputFolderName);
     }
 
-    if (response.schema.refKey) {
-      fs.writeFileSync(
-        `${outputFolderName}/${response.schema.refKey}.json`,
-        JSON.stringify(fakeData, null, 2),
-        "utf-8",
-      );
+    if (fileName) {
+      fs.writeFileSync(`${outputFolderName}/${fileName}.success.json`, fakeDataStr, "utf-8");
     } else {
-      fs.writeFileSync(`${uniqueId("response")}.json`, JSON.stringify(fakeData, null, 2), "utf-8");
+      fs.writeFileSync(`${uniqueId("response")}.json`, fakeDataStr, "utf-8");
     }
   }
 }
