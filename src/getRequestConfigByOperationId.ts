@@ -42,6 +42,10 @@ const getFakeData = (spec: Spec, response: Response | Reference) => {
     return toFakeObj(spec.definitions[refKey]);
   }
 
+  if (!response) {
+    return {};
+  }
+
   const { examples, schema } = response as Response;
 
   if (examples) {
