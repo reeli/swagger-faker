@@ -29,7 +29,7 @@ export class Traverse {
     if (definition.additionalProperties) {
       return {
         ...definition,
-        properties: this.handleRef(definition.additionalProperties),
+        properties: this.handleRef(definition.additionalProperties as Schema),
       };
     }
 
