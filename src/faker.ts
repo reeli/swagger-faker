@@ -8,6 +8,7 @@ import {
   dateGenerator,
   timeGenerator,
   dateTimeGenerator,
+  urlGenerator,
 } from "./generators";
 import { pickRefKey } from "./utils";
 import { Traverse } from "./traverse";
@@ -82,14 +83,14 @@ const toFakeProp = (schema: Schema) => {
     case "boolean":
       return booleanGenerator();
     case "string":
-      if (schema.format) {
-        if (schema.format === "date") {
-          return dateGenerator();
-        } else if (schema.format === "time") {
-          return timeGenerator();
-        } else if (schema.format === "date-time") {
-          return dateTimeGenerator();
-        }
+      if (schema.format === "date") {
+        return dateGenerator();
+      } else if (schema.format === "time") {
+        return timeGenerator();
+      } else if (schema.format === "date-time") {
+        return dateTimeGenerator();
+      } else if (schema.format === "uri") {
+        return urlGenerator();
       }
       return stringGenerator(schema.enum);
     case "number":

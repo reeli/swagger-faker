@@ -13,3 +13,4 @@ export const fileGenerator = () => faker.system.mimeType();
 export const dateTimeGenerator = () => faker.date.past().toISOString();
 export const dateGenerator = () => dateTimeGenerator().slice(0, 10);
 export const timeGenerator = () => dateTimeGenerator().slice(11);
+export const urlGenerator = () => faker.internet.url();
