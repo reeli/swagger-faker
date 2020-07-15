@@ -39,14 +39,14 @@ export const toFakeObj = (schema: Schema = {}): any => {
   if (schema.properties) {
     results = {
       ...results,
-      ...getFakeProperties(schema.properties),
+      ...getFakeProperties(schema.properties as Schema),
     };
   }
 
   if (schema.additionalProperties) {
     results = {
       ...results,
-      ...getFakeProperties(schema.additionalProperties),
+      ...getFakeProperties(schema.additionalProperties as Schema),
     };
   }
 
