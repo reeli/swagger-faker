@@ -25,6 +25,9 @@ describe("faker", () => {
         system: {
           mimeType: () => "File",
         },
+        date: {
+          past: () => new Date(2012, 2, 6, 6, 34, 23, 10),
+        },
       };
     });
   });

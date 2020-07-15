@@ -11,6 +11,14 @@ export const mockDefinitions = {
         format: "int64",
         example: 19920010,
       },
+      createdTime: {
+        type: "string",
+        format: "time",
+      },
+      updatedAt: {
+        type: "string",
+        format: "date-time",
+      },
       attachment: {
         $ref: "#/definitions/ScheduleVO",
       },
@@ -43,6 +51,10 @@ export const mockDefinitions = {
       },
       address: {
         type: "string",
+      },
+      createdAt: {
+        type: "string",
+        format: "date",
       },
     },
     title: "BookVO",
