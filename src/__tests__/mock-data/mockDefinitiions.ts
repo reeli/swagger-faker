@@ -227,6 +227,10 @@ export const mockDefinitions = {
         type: "string",
         enum: ["HuaFu Avenue"],
       },
+      website: {
+        type: "string",
+        format: "uri",
+      },
     },
   },
 } as any;

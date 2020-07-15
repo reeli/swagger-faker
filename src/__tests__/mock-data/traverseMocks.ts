@@ -406,6 +406,10 @@ export const traverseExpectedValue = {
         type: "string",
         enum: ["HuaFu Avenue"],
       },
+      website: {
+        type: "string",
+        format: "uri",
+      },
     },
   },
 };

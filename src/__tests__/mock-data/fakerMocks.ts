@@ -127,5 +127,6 @@ export const fakerExpectedValue = {
     address: ["test", 123],
     doorNumber: 10,
     street: "HuaFu Avenue",
+    website: "https://www.google.com",
   },
 };
