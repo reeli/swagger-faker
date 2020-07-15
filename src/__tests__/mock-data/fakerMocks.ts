@@ -2,6 +2,8 @@ export const fakerExpectedValue = {
   BookDetailVo: {
     authorName: "Tony",
     createdDate: 19920010,
+    createdTime: "06:34:23.010Z",
+    updatedAt: "2012-03-06T06:34:23.010Z",
     attachment: {
       team: "string words",
       schedules: [
@@ -9,6 +11,7 @@ export const fakerExpectedValue = {
           {
             price: "string words",
             address: "string words",
+            createdAt: "2012-03-06",
           },
         ],
       ],
@@ -21,6 +24,7 @@ export const fakerExpectedValue = {
         {
           price: "string words",
           address: "string words",
+          createdAt: "2012-03-06",
         },
       ],
     ],
@@ -28,6 +32,7 @@ export const fakerExpectedValue = {
   BookVO: {
     price: "string words",
     address: "string words",
+    createdAt: "2012-03-06",
   },
   InputStream: {},
   Resource: {
@@ -61,6 +66,8 @@ export const fakerExpectedValue = {
     attachment: {
       authorName: "Tony",
       createdDate: 19920010,
+      createdTime: "06:34:23.010Z",
+      updatedAt: "2012-03-06T06:34:23.010Z",
       attachment: {
         team: "string words",
         schedules: [
@@ -68,6 +75,7 @@ export const fakerExpectedValue = {
             {
               price: "string words",
               address: "string words",
+              createdAt: "2012-03-06",
             },
           ],
         ],
@@ -87,6 +95,8 @@ export const fakerExpectedValue = {
       attachment: {
         authorName: "Tony",
         createdDate: 19920010,
+        createdTime: "06:34:23.010Z",
+        updatedAt: "2012-03-06T06:34:23.010Z",
         attachment: {
           team: "string words",
           schedules: [
@@ -94,6 +104,7 @@ export const fakerExpectedValue = {
               {
                 price: "string words",
                 address: "string words",
+                createdAt: "2012-03-06",
               },
             ],
           ],
@@ -115,6 +126,6 @@ export const fakerExpectedValue = {
   Location: {
     address: ["test", 123],
     doorNumber: 10,
-    street: "HuaFu Avenue"
+    street: "HuaFu Avenue",
   },
 };
