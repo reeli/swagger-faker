@@ -128,5 +128,8 @@ export const fakerExpectedValue = {
     doorNumber: 10,
     street: "HuaFu Avenue",
     website: "https://www.google.com",
+    ipv4: "127.0.0.1",
+    ipv6: "::1",
+    email: "john@example.com",
   },
 };

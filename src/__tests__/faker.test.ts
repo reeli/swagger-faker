@@ -30,6 +30,9 @@ describe("faker", () => {
         },
         internet: {
           url: () => "https://www.google.com",
+          ip: () => "127.0.0.1",
+          ipv6: () => "::1",
+          email: () => "john@example.com",
         },
       };
     });

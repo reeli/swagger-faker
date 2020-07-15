@@ -231,6 +231,18 @@ export const mockDefinitions = {
         type: "string",
         format: "uri",
       },
+      ipv4: {
+        type: "string",
+        format: "ipv4",
+      },
+      ipv6: {
+        type: "string",
+        format: "ipv6",
+      },
+      email: {
+        type: "string",
+        format: "email",
+      },
     },
   },
 } as any;
