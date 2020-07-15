@@ -9,6 +9,9 @@ import {
   timeGenerator,
   dateTimeGenerator,
   urlGenerator,
+  ipv4Generator,
+  ipv6Generator,
+  emailGenerator,
 } from "./generators";
 import { pickRefKey } from "./utils";
 import { Traverse } from "./traverse";
@@ -91,6 +94,12 @@ const toFakeProp = (schema: Schema) => {
         return dateTimeGenerator();
       } else if (schema.format === "uri") {
         return urlGenerator();
+      } else if (schema.format === "ipv4") {
+        return ipv4Generator();
+      } else if (schema.format === "ipv6") {
+        return ipv6Generator();
+      } else if (schema.format === "email") {
+        return emailGenerator();
       }
       return stringGenerator(schema.enum);
     case "number":
