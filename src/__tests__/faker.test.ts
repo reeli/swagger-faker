@@ -25,6 +25,15 @@ describe("faker", () => {
         system: {
           mimeType: () => "File",
         },
+        date: {
+          past: () => new Date(2012, 2, 6, 6, 34, 23, 10),
+        },
+        internet: {
+          url: () => "https://www.google.com",
+          ip: () => "127.0.0.1",
+          ipv6: () => "::1",
+          email: () => "john@example.com",
+        },
       };
     });
   });

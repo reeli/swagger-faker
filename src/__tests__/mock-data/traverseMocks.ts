@@ -11,6 +11,14 @@ export const traverseExpectedValue = {
         format: "int64",
         example: 19920010,
       },
+      createdTime: {
+        type: "string",
+        format: "time",
+      },
+      updatedAt: {
+        type: "string",
+        format: "date-time",
+      },
       attachment: {
         type: "object",
         properties: {
@@ -28,6 +36,10 @@ export const traverseExpectedValue = {
                     type: "string",
                   },
                   address: {
+                    type: "string",
+                  },
+                  createdAt: {
+                    format: "date",
                     type: "string",
                   },
                 },
@@ -60,6 +72,10 @@ export const traverseExpectedValue = {
               address: {
                 type: "string",
               },
+              createdAt: {
+                format: "date",
+                type: "string",
+              },
             },
             title: "BookVO",
           },
@@ -75,6 +91,10 @@ export const traverseExpectedValue = {
         type: "string",
       },
       address: {
+        type: "string",
+      },
+      createdAt: {
+        format: "date",
         type: "string",
       },
     },
@@ -192,6 +212,14 @@ export const traverseExpectedValue = {
             format: "int64",
             example: 19920010,
           },
+          createdTime: {
+            type: "string",
+            format: "time",
+          },
+          updatedAt: {
+            format: "date-time",
+            type: "string",
+          },
           attachment: {
             type: "object",
             properties: {
@@ -209,6 +237,10 @@ export const traverseExpectedValue = {
                         type: "string",
                       },
                       address: {
+                        type: "string",
+                      },
+                      createdAt: {
+                        format: "date",
                         type: "string",
                       },
                     },
@@ -268,6 +300,14 @@ export const traverseExpectedValue = {
                 format: "int64",
                 example: 19920010,
               },
+              createdTime: {
+                type: "string",
+                format: "time",
+              },
+              updatedAt: {
+                format: "date-time",
+                type: "string",
+              },
               attachment: {
                 type: "object",
                 properties: {
@@ -285,6 +325,10 @@ export const traverseExpectedValue = {
                             type: "string",
                           },
                           address: {
+                            type: "string",
+                          },
+                          createdAt: {
+                            format: "date",
                             type: "string",
                           },
                         },
@@ -361,6 +405,22 @@ export const traverseExpectedValue = {
       street: {
         type: "string",
         enum: ["HuaFu Avenue"],
+      },
+      website: {
+        type: "string",
+        format: "uri",
+      },
+      ipv4: {
+        type: "string",
+        format: "ipv4",
+      },
+      ipv6: {
+        type: "string",
+        format: "ipv6",
+      },
+      email: {
+        type: "string",
+        format: "email",
       },
     },
   },

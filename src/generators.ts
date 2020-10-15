@@ -9,3 +9,11 @@ export const numberGenerator = (max?: number, min?: number) =>
     max,
   });
 export const fileGenerator = () => faker.system.mimeType();
+
+export const dateTimeGenerator = () => faker.date.past().toISOString();
+export const dateGenerator = () => dateTimeGenerator().slice(0, 10);
+export const timeGenerator = () => dateTimeGenerator().slice(11);
+export const urlGenerator = () => faker.internet.url();
+export const ipv4Generator = () => faker.internet.ip();
+export const ipv6Generator = () => faker.internet.ipv6();
+export const emailGenerator = () => faker.internet.email();

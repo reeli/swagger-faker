@@ -1,6 +1,18 @@
 import { Reference, Response, Schema, Spec } from "swagger-schema-official";
 import { get, isArray, map, mapValues } from "lodash";
-import { booleanGenerator, fileGenerator, numberGenerator, stringGenerator } from "./generators";
+import {
+  booleanGenerator,
+  fileGenerator,
+  numberGenerator,
+  stringGenerator,
+  dateGenerator,
+  timeGenerator,
+  dateTimeGenerator,
+  urlGenerator,
+  ipv4Generator,
+  ipv6Generator,
+  emailGenerator,
+} from "./generators";
 import { pickRefKey } from "./utils";
 import { Traverse } from "./traverse";
 
@@ -27,14 +39,14 @@ export const toFakeObj = (schema: Schema = {}): any => {
   if (schema.properties) {
     results = {
       ...results,
-      ...getFakeProperties(schema.properties),
+      ...getFakeProperties(schema.properties as Schema),
     };
   }
 
   if (schema.additionalProperties) {
     results = {
       ...results,
-      ...getFakeProperties(schema.additionalProperties),
+      ...getFakeProperties(schema.additionalProperties as Schema),
     };
   }
 
@@ -74,6 +86,21 @@ const toFakeProp = (schema: Schema) => {
     case "boolean":
       return booleanGenerator();
     case "string":
+      if (schema.format === "date") {
+        return dateGenerator();
+      } else if (schema.format === "time") {
+        return timeGenerator();
+      } else if (schema.format === "date-time") {
+        return dateTimeGenerator();
+      } else if (schema.format === "uri") {
+        return urlGenerator();
+      } else if (schema.format === "ipv4") {
+        return ipv4Generator();
+      } else if (schema.format === "ipv6") {
+        return ipv6Generator();
+      } else if (schema.format === "email") {
+        return emailGenerator();
+      }
       return stringGenerator(schema.enum);
     case "number":
     case "integer":
