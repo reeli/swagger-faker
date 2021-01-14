@@ -1,59 +1,57 @@
-import { Schema, Spec } from "swagger-schema-official";
 import { pickRefKey } from "./utils";
 import { mapValues, isArray, map } from "lodash";
+import { CustomSchema, CustomReference } from "@ts-tool/ts-codegen-core";
 
-const store: { [key: string]: any } = {};
+export const putBackAllRefs = (schemas: { [key: string]: CustomSchema | CustomReference }) => {
+  const store: { [key: string]: any } = {};
 
-export const handleDefinitions = (spec: Spec) => {
-  const resolveSchema = (v1: Schema): any => {
-    function resolveRef(v: Schema) {
-      const refKey = pickRefKey(v.$ref);
-      if (store[refKey]) {
-        return store[refKey];
-      }
-
-      const resolvedRef = handleRef(refKey, spec.definitions);
-      store[refKey] = resolvedRef;
-      return resolvedRef;
+  function pickRefData(s: CustomSchema) {
+    const refKey = pickRefKey(s.$ref);
+    if (store[refKey]) {
+      return store[refKey];
     }
 
+    const resolvedRef = putBackRefs(schemas[refKey]);
+    store[refKey] = resolvedRef;
+    return resolvedRef;
+  }
+
+  const putBackRefs = (schema: CustomSchema = {}): any => {
     // handle object
-    if (v1.type === "object" || v1.properties) {
+    if (schema.type === "object" || schema.properties) {
       return {
-        ...v1,
-        properties: mapValues(v1.properties, (v3) => resolveSchema(v3)),
+        ...schema,
+        properties: mapValues(schema.properties, (v3) => putBackRefs(v3)),
       };
     }
 
     // handle array
-    if (v1.items) {
-      if (isArray(v1.items)) {
+    if (schema.items) {
+      if (isArray(schema.items)) {
         return {
-          ...v1,
-          items: map(v1.items, (v) => resolveSchema(v)),
+          ...schema,
+          items: map(schema.items, (v) => putBackRefs(v)),
         };
       }
       return {
-        ...v1,
-        items: resolveSchema(v1.items),
+        ...schema,
+        items: putBackRefs(schema.items),
       };
     }
 
     // handle ref
-    if (v1.$ref) {
-      return resolveRef(v1);
+    if (schema.$ref) {
+      return pickRefData(schema);
     }
 
     // handle oneOf
-
-    if ((v1 as any).oneOf) {
-      return map((v1 as any).oneOf, (v) => resolveSchema(v));
+    if ((schema as any).oneOf) {
+      return map((schema as any).oneOf, (v) => putBackRefs(v));
     }
 
     // handle allOf
-
-    if (v1.allOf) {
-      return map((v1 as any).allOf, (v) => resolveSchema(v)).reduce((res, item) => {
+    if (schema.allOf) {
+      return map((schema as any).allOf, (v) => putBackRefs(v)).reduce((res, item) => {
         return {
           ...res,
           properties: {
@@ -64,19 +62,15 @@ export const handleDefinitions = (spec: Spec) => {
       }, {});
     }
 
-    return v1;
+    return schema;
   };
 
-  const handleRef = (refKey: string, definitions: Spec["definitions"]) => {
-    return resolveSchema((definitions || {})[refKey]);
-  };
-
-  mapValues(spec.definitions, (v1, k) => {
+  mapValues(schemas, (s, k) => {
     if (store[k]) {
       return store[k];
     }
 
-    const v = resolveSchema(v1);
+    const v = putBackRefs(s);
     store[k] = v;
     return v;
   });
