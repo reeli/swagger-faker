@@ -1,0 +1,672 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#putBackAllRefs should pick all $ref value and put them back from openapi 1`] = `
+Object {
+  "Cat": Object {
+    "properties": Object {
+      "age": Object {
+        "type": "integer",
+      },
+      "categories": Object {
+        "items": Object {
+          "properties": Object {
+            "id": Object {
+              "format": "int64",
+              "type": "integer",
+            },
+            "name": Object {
+              "type": "string",
+            },
+          },
+          "type": "object",
+          "xml": Object {
+            "name": "Category",
+          },
+        },
+        "type": "array",
+        "xml": Object {
+          "name": "categories",
+          "wrapped": true,
+        },
+      },
+      "contentType": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+        ],
+        "type": "string",
+      },
+      "hunts": Object {
+        "type": "boolean",
+      },
+      "id": Object {
+        "format": "int64",
+        "type": "integer",
+      },
+      "name": Object {
+        "type": "string",
+      },
+      "reason": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "1",
+          "3",
+          "4",
+          "5",
+          "6",
+        ],
+        "type": "string",
+      },
+      "tag": Object {
+        "type": "string",
+      },
+    },
+  },
+  "CatA": Object {
+    "properties": Object {
+      "country": Object {
+        "type": "string",
+      },
+      "kind": Object {
+        "enum": Array [
+          "Red Cat",
+          "Blue Cat",
+        ],
+        "type": "string",
+      },
+    },
+  },
+  "CatB": Object {
+    "properties": Object {
+      "age": Object {
+        "type": "boolean",
+      },
+      "kind": Object {
+        "enum": Array [
+          "Red Cat",
+          "Blue Cat",
+        ],
+        "type": "string",
+      },
+      "name": Object {
+        "type": "string",
+      },
+    },
+  },
+  "CatC": Object {
+    "properties": Object {
+      "age": Object {
+        "type": "integer",
+      },
+      "categories": Object {
+        "items": Object {
+          "properties": Object {
+            "id": Object {
+              "format": "int64",
+              "type": "integer",
+            },
+            "name": Object {
+              "type": "string",
+            },
+          },
+          "type": "object",
+          "xml": Object {
+            "name": "Category",
+          },
+        },
+        "type": "array",
+        "xml": Object {
+          "name": "categories",
+          "wrapped": true,
+        },
+      },
+      "contentType": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+        ],
+        "type": "string",
+      },
+      "hunts": Object {
+        "type": "boolean",
+      },
+      "id": Object {
+        "format": "int64",
+        "type": "integer",
+      },
+      "name": Object {
+        "type": "string",
+      },
+      "reason": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "1",
+          "3",
+          "4",
+          "5",
+          "6",
+        ],
+        "type": "string",
+      },
+      "tag": Object {
+        "type": "string",
+      },
+    },
+  },
+  "CatD": Object {
+    "properties": Object {},
+  },
+  "CatE": Object {
+    "properties": Object {
+      "country": Object {
+        "type": "string",
+      },
+    },
+  },
+  "CatF": Object {
+    "properties": Object {},
+  },
+  "Category": Object {
+    "properties": Object {
+      "id": Object {
+        "format": "int64",
+        "type": "integer",
+      },
+      "name": Object {
+        "type": "string",
+      },
+    },
+    "type": "object",
+    "xml": Object {
+      "name": "Category",
+    },
+  },
+  "Dictionary": Object {
+    "properties": Object {
+      "dictionary": Object {
+        "additionalProperties": Object {
+          "properties": Object {
+            "code": Object {
+              "type": "integer",
+            },
+            "text": Object {
+              "type": "string",
+            },
+          },
+          "type": "object",
+        },
+        "description": "Object only contains additional properties",
+        "properties": Object {},
+        "type": "object",
+      },
+      "dictionaryA": Object {
+        "additionalProperties": Object {
+          "oneOf": Array [
+            Object {
+              "type": "string",
+            },
+            Object {
+              "type": "number",
+            },
+          ],
+        },
+        "description": "Object contains both properties and additional properties",
+        "properties": Object {
+          "age": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "age",
+        ],
+        "type": "object",
+      },
+      "dictionaryB": Object {
+        "additionalProperties": Object {
+          "type": "string",
+        },
+        "description": "Additional properties is not an object",
+        "properties": Object {
+          "age": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "age",
+        ],
+        "type": "object",
+      },
+      "dictionaryC": Object {
+        "additionalProperties": true,
+        "description": "Additional properties is a boolean",
+        "properties": Object {
+          "age": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "dictionaryD": Object {
+        "additionalProperties": true,
+        "description": "Additional properties is a boolean and without properties",
+        "properties": Object {},
+        "type": "object",
+      },
+    },
+    "type": "object",
+  },
+  "Dog": Object {
+    "properties": Object {
+      "bark": Object {
+        "type": "boolean",
+      },
+      "breed": Object {
+        "enum": Array [
+          "Dingo",
+          "Husky",
+          "Retriever",
+          "Shepherd",
+        ],
+        "type": "string",
+      },
+      "categories": Object {
+        "items": Object {
+          "properties": Object {
+            "id": Object {
+              "format": "int64",
+              "type": "integer",
+            },
+            "name": Object {
+              "type": "string",
+            },
+          },
+          "type": "object",
+          "xml": Object {
+            "name": "Category",
+          },
+        },
+        "type": "array",
+        "xml": Object {
+          "name": "categories",
+          "wrapped": true,
+        },
+      },
+      "contentType": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+        ],
+        "type": "string",
+      },
+      "id": Object {
+        "format": "int64",
+        "type": "integer",
+      },
+      "name": Object {
+        "type": "string",
+      },
+      "reason": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "1",
+          "3",
+          "4",
+          "5",
+          "6",
+        ],
+        "type": "string",
+      },
+      "tag": Object {
+        "type": "string",
+      },
+    },
+  },
+  "Error": Object {
+    "properties": Object {
+      "code": Object {
+        "format": "int32",
+        "type": "integer",
+      },
+      "message": Object {
+        "type": "string",
+      },
+    },
+    "required": Array [
+      "code",
+      "message",
+    ],
+    "type": "object",
+  },
+  "Item": Object {
+    "properties": Object {
+      "color": Object {
+        "type": "string",
+      },
+      "id": Object {
+        "readOnly": true,
+        "type": "string",
+      },
+      "name": Object {
+        "type": "string",
+      },
+      "price": Object {
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+  "Items": Object {
+    "items": Object {
+      "properties": Object {
+        "color": Object {
+          "type": "string",
+        },
+        "id": Object {
+          "readOnly": true,
+          "type": "string",
+        },
+        "name": Object {
+          "type": "string",
+        },
+        "price": Object {
+          "type": "string",
+        },
+      },
+      "type": "object",
+    },
+    "type": "array",
+  },
+  "Message": Object {
+    "properties": Object {
+      "message": Object {
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+  "NewPet": Object {
+    "description": "Without type=object",
+    "properties": Object {
+      "contentType": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+        ],
+        "type": "string",
+      },
+      "name": Object {
+        "type": "string",
+      },
+      "reason": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "1",
+          "3",
+          "4",
+          "5",
+          "6",
+        ],
+        "type": "string",
+      },
+      "tag": Object {
+        "type": "string",
+      },
+    },
+    "required": Array [
+      "name",
+    ],
+  },
+  "Pet": Object {
+    "properties": Object {
+      "categories": Object {
+        "items": Object {
+          "properties": Object {
+            "id": Object {
+              "format": "int64",
+              "type": "integer",
+            },
+            "name": Object {
+              "type": "string",
+            },
+          },
+          "type": "object",
+          "xml": Object {
+            "name": "Category",
+          },
+        },
+        "type": "array",
+        "xml": Object {
+          "name": "categories",
+          "wrapped": true,
+        },
+      },
+      "contentType": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+        ],
+        "type": "string",
+      },
+      "id": Object {
+        "format": "int64",
+        "type": "integer",
+      },
+      "name": Object {
+        "type": "string",
+      },
+      "reason": Object {
+        "description": "Should generate type instead of enum, when enum value is number like.",
+        "enum": Array [
+          "1",
+          "3",
+          "4",
+          "5",
+          "6",
+        ],
+        "type": "string",
+      },
+      "tag": Object {
+        "type": "string",
+      },
+    },
+  },
+  "Pets": Object {
+    "items": Object {
+      "properties": Object {
+        "categories": Object {
+          "items": Object {
+            "properties": Object {
+              "id": Object {
+                "format": "int64",
+                "type": "integer",
+              },
+              "name": Object {
+                "type": "string",
+              },
+            },
+            "type": "object",
+            "xml": Object {
+              "name": "Category",
+            },
+          },
+          "type": "array",
+          "xml": Object {
+            "name": "categories",
+            "wrapped": true,
+          },
+        },
+        "contentType": Object {
+          "description": "Should generate type instead of enum, when enum value is number like.",
+          "enum": Array [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+          ],
+          "type": "string",
+        },
+        "id": Object {
+          "format": "int64",
+          "type": "integer",
+        },
+        "name": Object {
+          "type": "string",
+        },
+        "reason": Object {
+          "description": "Should generate type instead of enum, when enum value is number like.",
+          "enum": Array [
+            "1",
+            "3",
+            "4",
+            "5",
+            "6",
+          ],
+          "type": "string",
+        },
+        "tag": Object {
+          "type": "string",
+        },
+      },
+    },
+    "type": "array",
+  },
+  "RequestForm": Object {
+    "properties": Object {
+      "data": Object {
+        "properties": Object {
+          "categories": Object {
+            "items": Object {
+              "properties": Object {
+                "id": Object {
+                  "format": "int64",
+                  "type": "integer",
+                },
+                "name": Object {
+                  "type": "string",
+                },
+              },
+              "type": "object",
+              "xml": Object {
+                "name": "Category",
+              },
+            },
+            "type": "array",
+            "xml": Object {
+              "name": "categories",
+              "wrapped": true,
+            },
+          },
+          "contentType": Object {
+            "description": "Should generate type instead of enum, when enum value is number like.",
+            "enum": Array [
+              "01",
+              "02",
+              "03",
+              "04",
+              "05",
+              "06",
+            ],
+            "type": "string",
+          },
+          "id": Object {
+            "format": "int64",
+            "type": "integer",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "reason": Object {
+            "description": "Should generate type instead of enum, when enum value is number like.",
+            "enum": Array [
+              "1",
+              "3",
+              "4",
+              "5",
+              "6",
+            ],
+            "type": "string",
+          },
+          "tag": Object {
+            "type": "string",
+          },
+        },
+      },
+      "slice": Object {
+        "items": Object {
+          "type": "string",
+        },
+        "type": "array",
+        "x-go-json": "slice",
+        "x-go-name": "Slice",
+      },
+      "string": Object {
+        "type": "string",
+        "x-go-json": "string",
+        "x-go-name": "String",
+      },
+    },
+    "required": Array [
+      "string",
+      "slice",
+      "data",
+    ],
+    "type": "object",
+  },
+  "Resource": Object {
+    "properties": Object {
+      "description": Object {
+        "type": "string",
+      },
+      "filename": Object {
+        "type": "string",
+      },
+      "open": Object {
+        "type": "boolean",
+      },
+      "readable": Object {
+        "type": "boolean",
+      },
+    },
+    "title": "Resource",
+    "type": "object",
+  },
+}
+`;
