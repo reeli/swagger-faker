@@ -2,9 +2,6 @@ import { pickRefKey } from "./utils";
 import { mapValues, isArray, map } from "lodash";
 import { CustomSchema, CustomReference } from "@ts-tool/ts-codegen-core";
 
-// 由于 #/components/responses/SuccessMessage 不可能在 definition 中被使用，因此可以先处理 definitions/schemas，
-// 当 #/components/responses/xxx 中引用 definitions 时，可以直接使用
-
 export const putBackAllRefs = (schemas: { [key: string]: CustomSchema | CustomReference }) => {
   const store: { [key: string]: any } = {};
 
