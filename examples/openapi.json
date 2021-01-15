@@ -535,7 +535,7 @@
             "format": "int64"
           },
           "name": {
-            "$ref": "#/components/schemas/Pet"
+            "type": "string"
           }
         },
         "xml": {
@@ -894,16 +894,6 @@
     "responses": {
       "SuccessMessage": {
         "description": "Success",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/responses/SomeResponse"
-            }
-          }
-        }
-      },
-      "SomeResponse": {
-        "description": "Some Response",
         "content": {
           "application/json": {
             "schema": {
