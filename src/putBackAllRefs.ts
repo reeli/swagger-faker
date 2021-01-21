@@ -90,3 +90,62 @@ export const putBackRefs = (
 
   return putBack(resp);
 };
+
+const definitions = {
+  Tree: {
+    title: {
+      type: "string",
+    },
+    open: {
+      type: "array",
+      items: {
+        $ref: "#Item",
+      },
+    },
+    otherTree: {
+      $ref: "#Tree",
+    },
+    otherItem: {
+      $ref: "#Item",
+    },
+  },
+  Item: {
+    prop1: {
+      type: "string",
+    },
+    prop2: {
+      $ref: "#Tree",
+    },
+  },
+};
+
+const refs: any = [];
+
+export const resolveCircularReference = ($ref:any, depth?:number)=>{
+  const refKey = $ref.split("#")[1];
+  const refVal = (definitions as any)[refKey];
+  if (depth === 0) {
+    return null;
+  }
+  if (refs.includes(refKey)) {
+    return pickRef(refVal, refKey, (depth || 4) - 1);
+  }
+  return pickRef(refVal, refKey);
+}
+
+function pickRef(data: any, ref = "", depth?: number): any {
+  refs.push(ref);
+  return mapValues(data, (val) => {
+    if (val.$ref) {
+      return resolveCircularReference(val.$ref, depth)
+    }
+
+    if(val.type==="array" && val.items?.$ref){
+      return resolveCircularReference(val.items?.$ref, depth)
+    }
+
+    return val;
+  });
+}
+
+console.log(JSON.stringify(pickRef(definitions.Tree, "Tree"), null, 2), 'pickRef(definitions.Tree, "Tree")');
