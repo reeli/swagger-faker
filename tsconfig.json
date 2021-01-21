@@ -12,7 +12,7 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "rootDir": "src",
+    "rootDir": ".",
     "resolveJsonModule": true,
     "paths": {
       "*": ["*", "__types__/*"]
