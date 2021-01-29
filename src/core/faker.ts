@@ -18,7 +18,7 @@ function resolveProperties(
 ) {
   const parents = [...ctx.parents, parentRefKeyPath];
 
-  return mapValues(properties, (val, key) => {
+  return mapValues(properties, (val) => {
     if (getRef(val)) {
       const refKeyPath = getPathsFromRef(val.$ref).join(".");
       const refVal = get(openApi, refKeyPath);
@@ -27,7 +27,6 @@ function resolveProperties(
         return null;
       }
 
-      console.log(key, parents, ctx.currentDepth, "****");
       // if $ref is circular
       if (parents.includes(refKeyPath)) {
         return putBackRefs(refVal, refKeyPath, openApi, {
@@ -69,9 +68,9 @@ export const putBackRefs = (
 
 const getRef = (v: any): v is IReference => v.$ref;
 
-export const resolveResponse = (respSchema: ISchema | IReference, openApi: IOpenAPI) => {
+export const resolveResponse = (respSchema: ISchema | IReference, openApi: IOpenAPI, maxDepth = 4) => {
   const refKeyPath = getPathsFromRef(respSchema.$ref).join(".");
   const refValue = get(openApi, refKeyPath);
 
-  return putBackRefs(refValue, refKeyPath, openApi, { parents: [], maxDepth: 4 });
+  return putBackRefs(refValue, refKeyPath, openApi, { parents: [], maxDepth });
 };
