@@ -1,7 +1,7 @@
-import { resolveResponse } from "../schema";
+import { resolveResponse } from "../faker";
 import { mockOpenApi, expectedResults } from "./mocks";
 
-describe("schemas", () => {
+describe("faker", () => {
   it("should handle circular $ref", () => {
     expect(
       resolveResponse(
