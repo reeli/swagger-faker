@@ -163,3 +163,65 @@ export const expectedResults = {
     },
   },
 };
+
+export const expectedResults1 = {
+  properties: {
+    message: {
+      type: "string",
+    },
+  },
+  type: "object",
+};
+
+export const expectedResults2 = {
+  items: {
+    description: "Without type=object",
+    properties: {
+      categories: {
+        items: {
+          properties: {
+            id: {
+              format: "int64",
+              type: "integer",
+            },
+            name: {
+              type: "string",
+            },
+          },
+          type: "object",
+          xml: {
+            name: "Category",
+          },
+        },
+        type: "array",
+        xml: {
+          name: "categories",
+          wrapped: true,
+        },
+      },
+      contentType: {
+        description: "Should generate type instead of enum, when enum value is number like.",
+        enum: ["01", "02", "03", "04", "05", "06"],
+        type: "string",
+      },
+      id: {
+        format: "int64",
+        type: "integer",
+      },
+      name: {
+        type: "string",
+      },
+      reason: {
+        description: "Should generate type instead of enum, when enum value is number like.",
+        enum: ["1", "3", "4", "5", "6"],
+        type: "string",
+      },
+      tag: {
+        type: "string",
+      },
+    },
+    required: ["name", "id"],
+    type: "object",
+  },
+  type: "array",
+};
