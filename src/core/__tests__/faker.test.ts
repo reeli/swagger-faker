@@ -21,17 +21,21 @@ describe("faker", () => {
       },
     });
 
-    expect(toFakeData(input)).toEqual({
-      categories: {
-        id: 29274,
-        name: "Gold",
+    expect(toFakeData(input)).toEqual([
+      {
+        categories: [
+          {
+            id: 29274,
+            name: "Gold",
+          },
+        ],
+        contentType: "Product",
+        id: 95890,
+        name: "killer Liaison",
+        reason: "grey Crest",
+        tag: "capacitor Chicken Tactics",
       },
-      contentType: "Product",
-      id: 95890,
-      name: "killer Liaison",
-      reason: "grey Crest",
-      tag: "capacitor Chicken Tactics",
-    });
+    ]);
   });
 
   it("should generate correct fake data if given schema contains circular ref", () => {

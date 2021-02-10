@@ -50,5 +50,5 @@ const toFakeArray = (schema: SchemaWithoutRef): ReturnType<any> => {
     return schema.items.map((item) => toFakeObj(item));
   }
 
-  return toFakeObj(schema.items as ISchema);
+  return [toFakeData(schema.items!)];
 };
