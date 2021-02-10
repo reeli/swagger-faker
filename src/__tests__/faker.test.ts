@@ -26,7 +26,7 @@ describe("faker", () => {
           mimeType: () => "File",
         },
         date: {
-          past: () => new Date(2012, 2, 6, 6, 34, 23, 10),
+          past: () => new Date("2012-03-06T06:34:23.010+00:00"),
         },
         internet: {
           url: () => "https://www.google.com",
