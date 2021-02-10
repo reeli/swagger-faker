@@ -1,6 +1,6 @@
 import { putBackRefs } from "../putBackRefs";
 import { IOpenAPI } from "../../__types__/OpenAPI";
-import { toFaker } from "../faker";
+import { toFakeData } from "../faker";
 import openApi from "./openapi.json";
 import { mockOpenApi } from "./mocks";
 
@@ -21,7 +21,7 @@ describe("faker", () => {
       },
     });
 
-    expect(toFaker(input)).toEqual({
+    expect(toFakeData(input)).toEqual({
       categories: {
         id: 29274,
         name: "Gold",
@@ -47,7 +47,7 @@ describe("faker", () => {
       },
     });
 
-    expect(toFaker(input)).toEqual({
+    expect(toFakeData(input)).toEqual({
       id: "Tactics Tuna Sleek",
       item: {
         children: {
