@@ -15,7 +15,7 @@ interface SchemaWithoutRef extends ISchema {
   additionalProperties?: ISchema | boolean;
 }
 
-export const toFaker = (schema: SchemaWithoutRef): ReturnType<any> => {
+export const toFakeData = (schema: SchemaWithoutRef): ReturnType<any> => {
   if (!schema) {
     return schema;
   }
@@ -40,10 +40,10 @@ export const toFaker = (schema: SchemaWithoutRef): ReturnType<any> => {
     return stringGenerator();
   }
 
-  return {};
+  return null;
 };
 
-const toFakeObj = (schema: SchemaWithoutRef) => mapValues(schema.properties, (item) => toFaker(item));
+const toFakeObj = (schema: SchemaWithoutRef) => mapValues(schema.properties, (item) => toFakeData(item));
 
 const toFakeArray = (schema: SchemaWithoutRef): ReturnType<any> => {
   if (isArray(schema.items)) {
