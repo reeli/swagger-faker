@@ -1,11 +1,51 @@
 import { putBackRefs } from "../putBackRefs";
 import { IOpenAPI } from "../../__types__/OpenAPI";
-import { toFakeData } from "../faker";
 import openApi from "./openapi.json";
 import { mockOpenApi } from "./mocks";
 
 describe("faker", () => {
+  beforeAll(() => {
+    jest.mock("faker", () => {
+      return {
+        random: {
+          words: () => "string words",
+          number: ({ min, max }: { min?: number; max?: number }) => {
+            if (min && max) {
+              return min;
+            }
+            if (min) {
+              return min;
+            }
+            if (max) {
+              return max;
+            }
+            return 123;
+          },
+          boolean: () => true,
+        },
+        system: {
+          mimeType: () => "File",
+        },
+        date: {
+          past: () => new Date(2012, 2, 6, 6, 34, 23, 10),
+        },
+        internet: {
+          url: () => "https://www.google.com",
+          ip: () => "127.0.0.1",
+          ipv6: () => "::1",
+          email: () => "john@example.com",
+        },
+      };
+    });
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
   it("should generate correct fake data if given schema contains array", () => {
+    const { toFakeData } = require("../faker");
+
     const input = putBackRefs({
       schema: {
         type: "array",
@@ -25,20 +65,22 @@ describe("faker", () => {
       {
         categories: [
           {
-            id: 29274,
-            name: "Gold",
+            id: 123,
+            name: "string words",
           },
         ],
-        contentType: "Product",
-        id: 95890,
-        name: "killer Liaison",
-        reason: "grey Crest",
-        tag: "capacitor Chicken Tactics",
+        contentType: "string words",
+        id: 123,
+        name: "string words",
+        reason: "string words",
+        tag: "string words",
       },
     ]);
   });
 
   it("should generate correct fake data if given schema contains circular ref", () => {
+    const { toFakeData } = require("../faker");
+
     const input = putBackRefs({
       schema: {
         $ref: "#/components/schemas/Tree",
@@ -52,30 +94,30 @@ describe("faker", () => {
     });
 
     expect(toFakeData(input)).toEqual({
-      id: "Tactics Tuna Sleek",
+      id: "string words",
       item: {
         children: {
-          id: "fault-tolerant connect",
+          id: "string words",
           item: {
             children: {
-              id: "experiences",
+              id: "string words",
               item: {
                 children: {
-                  id: "intranet B2B Implementation",
+                  id: "string words",
                   item: null,
-                  name: "Swiss Franc Small Metal Chicken withdrawal",
+                  name: "string words",
                 },
-                id: "incubate Burundi Franc white",
+                id: "string words",
               },
-              name: "Practical Cotton",
+              name: "string words",
             },
-            id: "Tuna",
+            id: "string words",
           },
-          name: "Total",
+          name: "string words",
         },
-        id: "impactful",
+        id: "string words",
       },
-      name: "Creative",
+      name: "string words",
     });
   });
 });

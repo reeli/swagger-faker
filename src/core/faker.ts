@@ -1,6 +1,15 @@
 import { ISchema } from "../__types__/OpenAPI";
 import { mapValues, isArray } from "lodash";
-import { booleanGenerator, numberGenerator, stringGenerator } from "../generators";
+import {
+  dateGenerator,
+  timeGenerator,
+  dateTimeGenerator,
+  urlGenerator,
+  ipv4Generator,
+  ipv6Generator,
+  emailGenerator,
+} from "../generators";
+import faker from "faker";
 
 interface SchemaWithoutRef extends ISchema {
   not?: ISchema;
@@ -29,15 +38,42 @@ export const toFakeData = (schema: SchemaWithoutRef): ReturnType<any> => {
   }
 
   if (schema.type === "boolean") {
-    return booleanGenerator();
+    return fakeBoolean();
   }
 
   if (schema.type === "integer" || schema.type === "number") {
-    return numberGenerator();
+    return fakeNumber();
   }
 
   if (schema.type === "string") {
-    return stringGenerator();
+    if (schema.format === "date") {
+      return dateGenerator();
+    }
+
+    if (schema.format === "time") {
+      return timeGenerator();
+    }
+
+    if (schema.format === "date-time") {
+      return dateTimeGenerator();
+    }
+    if (schema.format === "uri") {
+      return urlGenerator();
+    }
+
+    if (schema.format === "ipv4") {
+      return ipv4Generator();
+    }
+
+    if (schema.format === "ipv6") {
+      return ipv6Generator();
+    }
+
+    if (schema.format === "email") {
+      return emailGenerator();
+    }
+
+    return fakeString();
   }
 
   return null;
@@ -52,3 +88,14 @@ const toFakeArray = (schema: SchemaWithoutRef): ReturnType<any> => {
 
   return [toFakeData(schema.items!)];
 };
+
+export const fakeBoolean = () => faker.random.boolean();
+
+export const fakeString = () => faker.random.words();
+export const fakeFile = () => faker.system.mimeType();
+
+export const fakeNumber = (max?: number, min?: number) =>
+  faker.random.number({
+    min,
+    max,
+  });
