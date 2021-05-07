@@ -1,6 +1,5 @@
 import { ISchema, IOpenAPI, IReference } from "../__types__/OpenAPI";
-import { getPathsFromRef } from "../utils/commonUtils";
-import { get, mapValues, isArray, isNumber, map } from "lodash";
+import { get, mapValues, isArray, isNumber, map, takeRight } from "lodash";
 
 interface Ctx {
   parents: string[];
@@ -13,6 +12,15 @@ interface PutBackRefParams {
   openApi: IOpenAPI;
   ctx: Ctx;
 }
+
+const getPathsFromRef = (str?: string): string[] => {
+  if (!str) {
+    return [];
+  }
+
+  const paths = str.replace(/^#\//, "").split("/");
+  return takeRight(paths, 3);
+};
 
 export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnType<any> => {
   if (getRef(schema)) {
@@ -89,4 +97,4 @@ export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnT
   return schema;
 };
 
-const getRef = (v: any): v is IReference => v.$ref;
+export const getRef = (v: any): v is IReference => v.$ref;
