@@ -12,7 +12,7 @@ import {
   ipv4Generator,
   ipv6Generator,
   emailGenerator,
-} from "./generators";
+} from "./core/generators";
 import { pickRefKey } from "./utils";
 import { Traverse } from "./traverse";
 
