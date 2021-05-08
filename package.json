@@ -59,7 +59,8 @@
     "typescript": "^4.1.3"
   },
   "dependencies": {
-    "faker": "4.1.x"
+    "faker": "4.1.x",
+    "swagger2openapi": "^7.0.5"
   },
   "peerDependencies": {
     "lodash": ">=4.17.0",

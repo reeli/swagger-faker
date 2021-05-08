@@ -15,7 +15,7 @@
     "rootDir": ".",
     "resolveJsonModule": true,
     "paths": {
-      "*": ["*", "__types__/*"]
+      "*": ["*", "src/__types__/*"]
     }
   },
   "exclude": ["node_modules", "examples", "**/__tests__/**"]
