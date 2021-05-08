@@ -3,8 +3,6 @@ import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { transformFromAstSync } from "@babel/core";
-import { Spec } from "swagger-schema-official";
-import * as fs from "fs";
 import pathToRegexp from "path-to-regexp";
 
 export const prettifyCode = (code: string) =>
@@ -48,18 +46,6 @@ export const getInsertFileStr = (fileStr: string, propName: string) => {
 
   return transformFromAstSync(ast, undefined, { compact: true });
 };
-
-export function printFaker(spec: Spec, response: any, fileName?: string, outputFolderName = ".output") {
-  if (spec.definitions) {
-    const fakeDataStr = JSON.stringify(response, null, 2);
-
-    if (!fs.existsSync(outputFolderName)) {
-      fs.mkdirSync(outputFolderName);
-    }
-
-    fs.writeFileSync(`${outputFolderName}/${fileName}.json`, fakeDataStr, "utf-8");
-  }
-}
 
 export const isMatch = (routePattern: string) => (routePath: string) => {
   const regexp = pathToRegexp(routePattern);
