@@ -1,7 +1,7 @@
 import { putBackRefs } from "../putBackRefs";
 import { IOpenAPI } from "../../__types__/OpenAPI";
-import openApi from "./openapi.json";
-import { mockOpenApi } from "./mocks";
+import openApi from "./mocks/openapi.json";
+import { mockOpenApi } from "./mocks/mocks";
 
 describe("faker", () => {
   beforeAll(() => {
