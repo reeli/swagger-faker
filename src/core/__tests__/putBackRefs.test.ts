@@ -1,6 +1,6 @@
 import { putBackRefs } from "../putBackRefs";
-import { mockOpenApi, expectedResults, expectedResults1, expectedResults2 } from "./mocks";
-import openApi from "./openapi.json";
+import { mockOpenApi, expectedResults, expectedResults1, expectedResults2 } from "./mocks/mocks";
+import openApi from "./mocks/openapi.json";
 import { IOpenAPI } from "../../__types__/OpenAPI";
 
 describe("#putBackRefs", () => {

@@ -23,6 +23,10 @@ const getPathsFromRef = (str?: string): string[] => {
 };
 
 export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnType<any> => {
+  if(!schema){
+    return;
+  }
+
   if (getRef(schema)) {
     const refKeyPath = getPathsFromRef(schema.$ref).join(".");
 
@@ -52,7 +56,7 @@ export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnT
   }
 
   // handle object
-  if (schema.type === "object" || schema.properties) {
+  if (schema?.type === "object" || schema.properties) {
     return {
       ...schema,
       properties: mapValues(schema.properties, (item) => putBackRefs({ schema: item, openApi, ctx })),
@@ -97,4 +101,4 @@ export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnT
   return schema;
 };
 
-export const getRef = (v: any): v is IReference => v.$ref;
+export const getRef = (v: any): v is IReference => v?.$ref;
