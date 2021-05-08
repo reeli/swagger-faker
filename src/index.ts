@@ -9,11 +9,10 @@ import converter from "swagger2openapi";
 
 const getInput = (filePath: string) => JSON.parse(fs.readFileSync(filePath, "utf8")) as IOpenAPI;
 
-export const fakerGenFromObj = (openapi: IOpenAPI) => {
-  const { basePath, paths } = openapi;
+const fakerGenFromObj = (openapi: IOpenAPI) => {
   const outputs: any[] = [];
 
-  mapValues(paths, (pathItem, pathName) => {
+  mapValues(openapi.paths, (pathItem, pathName) => {
     mapValues(pathItem, (schema, method) => {
       const schemaWithoutRefs = putBackRefs({
         schema: (getFirstSuccessResponse(schema.responses) as any)?.data,
@@ -26,7 +25,7 @@ export const fakerGenFromObj = (openapi: IOpenAPI) => {
       });
       outputs.push({
         operationId: schema.operationId,
-        path: `${getBasePathFromServers(basePath)}${pathName}`,
+        path: `${getBasePathFromServers(openapi?.servers)}${pathName}`,
         method: upperCase(method),
         summary: schema.summary,
         mocks: toFakeData(schemaWithoutRefs),
@@ -49,7 +48,7 @@ const getBasePathFromServers = (servers?: IServer[]): string => {
   return parse(server?.url)?.pathname || "";
 };
 
-export const fakerGenFromPath = (filePath: string) => {
+const fakerGenFromPath = (filePath: string) => {
   const input = getInput(filePath);
   if (input.swagger === "2.0") {
     return converter.convertObj(input, { path: true, warnOnly: true }).then((options: any) => {
@@ -63,3 +62,5 @@ export const fakerGenFromPath = (filePath: string) => {
 // fakerGenFromPath("/Users/rrli/tw/gitRepo/swagger-faker/examples/openapi.json").then((v: any) => {
 //   console.log(v, "v");
 // });
+
+export { fakerGenFromObj, fakerGenFromPath };
