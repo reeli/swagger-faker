@@ -5,8 +5,9 @@ import { mapValues, upperCase, isEmpty, get } from "lodash";
 import { parse } from "url";
 import converter from "swagger2openapi";
 import { getFirstSuccessResponse, getInput } from "./utils";
+import { Spec } from "swagger-schema-official";
 
-const fakerGenFromObj = (openapi: IOpenAPI, isFixed: boolean) => {
+const fromOpenApi = (openapi: IOpenAPI, isFixed: boolean) => {
   const outputs: any[] = [];
 
   mapValues(openapi.paths, (pathItem, pathName) => {
@@ -33,6 +34,16 @@ const fakerGenFromObj = (openapi: IOpenAPI, isFixed: boolean) => {
   return outputs;
 };
 
+const fakerGenFromObj = (data: IOpenAPI | Spec, isFixed: boolean) => {
+  if (data.swagger === "2.0") {
+    return converter
+      .convertObj(data, { path: true, warnOnly: true })
+      .then((options: { openapi: IOpenAPI }) => fromOpenApi(options.openapi, isFixed));
+  }
+
+  return Promise.resolve(fromOpenApi(data as IOpenAPI, isFixed));
+};
+
 const getBasePathFromServers = (servers?: IServer[]): string => {
   if (isEmpty(servers)) {
     return "";
@@ -48,12 +59,12 @@ const getBasePathFromServers = (servers?: IServer[]): string => {
 const fakerGenFromPath = (filePath: string) => {
   const input = getInput(filePath);
   if (input.swagger === "2.0") {
-    return converter.convertObj(input, { path: true, warnOnly: true }).then((options: any) => {
-      return fakerGenFromObj(options.openapi, false);
-    });
+    return converter
+      .convertObj(input, { path: true, warnOnly: true })
+      .then((options: any) => fakerGenFromObj(options.openapi, false));
   }
 
-  return Promise.resolve(fakerGenFromObj(input, false));
+  return fakerGenFromObj(input, false);
 };
 
 export { fakerGenFromObj, fakerGenFromPath };

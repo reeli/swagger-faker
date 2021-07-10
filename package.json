@@ -43,6 +43,7 @@
     "@types/path-to-regexp": "1.7.0",
     "@types/prettier": "1.18.2",
     "@types/rollup": "0.54.x",
+    "@types/swagger-schema-official": "^2.0.22",
     "axios": "0.19.0",
     "babel-jest": "24.9.0",
     "babel-plugin-pure-calls-annotation": "0.2.x",
