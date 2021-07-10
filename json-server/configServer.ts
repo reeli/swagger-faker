@@ -23,10 +23,12 @@ module.exports = () => {
 const defaultRoutesStr = `{}`;
 const utilsStr = `const pathToRegexp = require("path-to-regexp");
 
-export const isMatch = (routePattern) => (routePath) => {
+const isMatch = (routePattern) => (routePath) => {
   const regexp = pathToRegexp(routePattern);
   return !!regexp.exec(routePath);
 };
+
+module.exports = { isMatch };
 `;
 
 const bootstrap = () => {

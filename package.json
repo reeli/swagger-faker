@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "start": "ts-node json-server/configServer.ts",
-    "mock": "npx json-server --watch mock-server/db.js --routes mock-server/routes.json",
+    "mock": "npx json-server --watch mock-server/db.js --routes mock-server/routes.json --middlewares mock-server/middlewares/*.js",
     "test": "jest",
     "build": "rm -rf dist/ && tsc",
     "release": "rm -rf lib/ && rm -rf module/ && rollup -c rollup.config.ts",
