@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { isEmpty, map, camelCase } from "lodash";
 import { fakerGenFromPath } from "../src";
-import { generateMockFile } from "../src/utils";
+import { generateMockFile, isJSON } from "../src/utils";
 import { FakeGenOutput } from "common";
 import { prettifyCode, insertStrToDB } from "./utils";
 
@@ -11,19 +11,35 @@ const mockServerConfig = {
 };
 const dbPath = `${mockServerConfig.outputFolder}/db.js`;
 const routesPath = `${mockServerConfig.outputFolder}/routes.json`;
+const utilsPath = `${mockServerConfig.outputFolder}/utils.js`;
 const mockDataFolder = `${mockServerConfig.outputFolder}/data`;
+const middlewaresFolder = `${mockServerConfig.outputFolder}/middlewares`;
 
 const defaultDBStr = `
 module.exports = () => {
   return {};
 };
 `;
-
 const defaultRoutesStr = `{}`;
+const utilsStr = `const pathToRegexp = require("path-to-regexp");
+
+export const isMatch = (routePattern) => (routePath) => {
+  const regexp = pathToRegexp(routePattern);
+  return !!regexp.exec(routePath);
+};
+`;
 
 const bootstrap = () => {
   if (!fs.existsSync(mockServerConfig.outputFolder)) {
     fs.mkdirSync(mockServerConfig.outputFolder, { recursive: true });
+  }
+
+  if (!fs.existsSync(middlewaresFolder)) {
+    fs.mkdirSync(middlewaresFolder, { recursive: true });
+  }
+
+  if (!fs.existsSync(utilsPath)) {
+    fs.writeFileSync(utilsPath, utilsStr);
   }
 
   if (!fs.existsSync(dbPath)) {
@@ -53,6 +69,7 @@ const configJsonServer = (item: FakeGenOutput) => {
   }
 
   if (item.method === "POST" || item.method === "PUT" || item.method == "DELETE") {
+    handleNonGetRequest(item, "../utils", "../data", middlewaresFolder);
   }
 };
 
@@ -93,40 +110,40 @@ export const writeRoutes = (req: FakeGenOutput, operationId: string) => {
   fs.writeFileSync(routesPath, JSON.stringify(newRoutes, null, 2));
 };
 
-//
-// const handleNonGetRequest = () => {
-//   const routePattern = getRoutePath(request.path);
-//   const method = toUpper(request.method);
-//   const temp1 = `
-//     const { isMatch } = require("../utils");
-//     const ${operationId} = require("../../.output/${operationId}.json");
-//
-//     module.exports = (req, res, next) => {
-//       if (req.method === "${method}" && isMatch("${routePattern}")(req.path)) {
-//         res.status(200).send(${operationId});
-//         return;
-//       }
-//
-//       next();
-//     };
-//     `;
-//
-//   const temp2 = `
-//     const { isMatch } = require("../utils");
-//
-//     module.exports = (req, res, next) => {
-//       if (req.method === "${method}" && isMatch("${routePattern}")(req.path)) {
-//         res.status(200).send();
-//         return;
-//       }
-//
-//       next();
-//     };
-//     `;
-//
-//   const code = isEmpty(request.response) ? temp2 : temp1;
-//   fs.writeFileSync(`./${operationId}.js`, prettifyCode(code));
-// };
-//
+const handleNonGetRequest = (item: FakeGenOutput, utilsPath: string, mockDataPath: string, middlewarePath: string) => {
+  const routePattern = getRoutePath(item.path);
+  const operationId = camelCase(item.operationId);
+  const resWithMockData = `
+    const { isMatch } = require("${utilsPath}");
+    const ${operationId} = require("${mockDataPath}/${operationId}.json");
+
+    module.exports = (req, res, next) => {
+      if (req.method === "${item.method}" && isMatch("${routePattern}")(req.path)) {
+        res.status(200).send(${operationId});
+        return;
+      }
+
+      next();
+    };
+    `;
+
+  const resWithoutMockData = `
+    const { isMatch } = require("${utilsPath}");
+
+    module.exports = (req, res, next) => {
+      if (req.method === "${item.method}" && isMatch("${routePattern}")(req.path)) {
+        res.status(200).send();
+        return;
+      }
+
+      next();
+    };
+    `;
+
+  const code = item.mocks && isJSON(item.mocks) ? resWithMockData : resWithoutMockData;
+
+  generateMockFile(item.mocks, operationId, mockDataFolder);
+  fs.writeFileSync(`${middlewarePath}/${operationId}.js`, prettifyCode(code));
+};
 
 bootstrap();

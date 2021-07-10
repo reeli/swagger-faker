@@ -1,6 +1,7 @@
 import { IReference, IComponents, IResponse, IOpenAPI } from "OpenAPI";
 import { Dictionary, first, values, keys } from "lodash";
 import fs from "fs";
+import pathToRegexp from "path-to-regexp";
 
 export const getRef = (v: any): v is IReference => v?.$ref;
 
@@ -56,4 +57,9 @@ export const isJSON = (data: any) => {
   }
 
   return typeof res === "object" && res !== null;
+};
+
+export const isMatch = (routePattern: string) => (routePath: string) => {
+  const regexp = pathToRegexp(routePattern);
+  return !!regexp.exec(routePath);
 };
