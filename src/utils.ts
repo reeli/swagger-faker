@@ -1,4 +1,4 @@
-import {IReference, IComponents, IResponse} from "OpenAPI";
+import {IReference, IComponents, IResponse, IOpenAPI} from "OpenAPI";
 import {Dictionary, first, values, keys} from "lodash";
 import fs from "fs";
 
@@ -39,3 +39,5 @@ export function generateMockFile(fakeDataObj: any, fileName: string, outputFolde
 
   fs.writeFileSync(`${outputFolderName}/${fileName}.json`, fakeDataStr, "utf-8");
 }
+
+export const getInput = (filePath: string) => JSON.parse(fs.readFileSync(filePath, "utf8")) as IOpenAPI;
