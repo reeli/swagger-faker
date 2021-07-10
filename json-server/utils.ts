@@ -13,22 +13,21 @@ export const prettifyCode = (code: string) =>
     parser: "babel",
   });
 
-export const getInsertFileStr = (fileStr: string, propName: string) => {
-  let lastImport: any;
+export const insertStrToDB = (fileStr: string, propName: string, mockDataFolderPath:string) => {
+  let beforeReturn: any;
   let isExists: boolean = false;
 
-  const ast = parse(fileStr, {
-    sourceType: "module",
-  });
-
+  const ast = parse(fileStr, { sourceType: "module" });
   traverse(ast, {
+    ReturnStatement: (path) => {
+      beforeReturn = path;
+    },
     VariableDeclaration: (path) => {
       path.node.declarations.map((node) => {
         if ((node.id as any).name === propName) {
           isExists = true;
         }
       });
-      lastImport = path;
     },
     ObjectExpression: ({ node }) => {
       node.properties.push(t.objectProperty(t.identifier(propName), t.identifier(propName), undefined, true));
@@ -40,8 +39,8 @@ export const getInsertFileStr = (fileStr: string, propName: string) => {
     return;
   }
 
-  if (lastImport) {
-    lastImport.insertAfter(parse(`const ${propName} = require("./${propName}.json");`, { sourceType: "module" }));
+  if (beforeReturn) {
+    beforeReturn.insertBefore(parse(`const ${propName} = require("${mockDataFolderPath}/${propName}.json");`, { sourceType: "module" }));
   }
 
   return transformFromAstSync(ast, undefined, { compact: true });
