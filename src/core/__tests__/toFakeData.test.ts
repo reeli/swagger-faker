@@ -44,7 +44,7 @@ describe("faker", () => {
   });
 
   it("should generate correct fake data if given schema contains array", () => {
-    const { toFakeData } = require("../faker");
+    const { toFakeData } = require("../toFakeData");
 
     const input = putBackRefs({
       schema: {
@@ -79,7 +79,7 @@ describe("faker", () => {
   });
 
   it("should generate correct fake data if given schema contains circular ref", () => {
-    const { toFakeData } = require("../faker");
+    const { toFakeData } = require("../toFakeData");
 
     const input = putBackRefs({
       schema: {

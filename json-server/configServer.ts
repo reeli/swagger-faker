@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import { isEmpty, map, toUpper } from "lodash";
 import { getInsertFileStr, prettifyCode } from "./utils";
-import { fakerGenFromPath } from "../index";
-import { generateMockFile } from "../core/generateMockFiles";
+import { fakerGenFromPath } from "../src";
+import {generateMockFile} from "../src/utils";
 
 const path = "/Users/rrli/tw/gitRepo/swagger-faker/examples/swagger.json";
 const mockServerConfig = {

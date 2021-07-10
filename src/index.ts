@@ -1,11 +1,11 @@
 import fs from "fs";
 import { IOpenAPI, IServer } from "./__types__/OpenAPI";
 import { putBackRefs } from "./core/putBackRefs";
-import { toFakeData } from "./core/faker";
+import { toFakeData } from "./core/toFakeData";
 import { mapValues, upperCase, isEmpty, get } from "lodash";
-import { getFirstSuccessResponse } from "./core/getFirstSuccessResponse";
 import { parse } from "url";
 import converter from "swagger2openapi";
+import {getFirstSuccessResponse} from "./core/utils";
 
 const getInput = (filePath: string) => JSON.parse(fs.readFileSync(filePath, "utf8")) as IOpenAPI;
 

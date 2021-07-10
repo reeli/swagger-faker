@@ -1,5 +1,6 @@
-import { ISchema, IOpenAPI, IReference } from "../__types__/OpenAPI";
+import { ISchema, IOpenAPI, IReference } from "OpenAPI";
 import { get, mapValues, isArray, isNumber, map, takeRight } from "lodash";
+import {getRef} from "./utils";
 
 interface Ctx {
   parents: string[];
@@ -101,4 +102,3 @@ export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnT
   return schema;
 };
 
-export const getRef = (v: any): v is IReference => v?.$ref;

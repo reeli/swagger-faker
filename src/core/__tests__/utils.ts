@@ -1,4 +1,4 @@
-import { getFirstSuccessResponse } from "../getFirstSuccessResponse";
+import {getFirstSuccessResponse} from "../utils";
 
 const mockResponses = {
   "200": {
