@@ -1,7 +1,7 @@
 import { putBackRefs } from "../putBackRefs";
 import { mockOpenApi, expectedResults, expectedResults1, expectedResults2 } from "./mocks/mocks";
 import openApi from "./mocks/openapi.json";
-import { IOpenAPI } from "../../__types__/OpenAPI";
+import { IOpenAPI } from "../__types__/OpenAPI";
 
 describe("#putBackRefs", () => {
   it("should handle circular $ref", () => {

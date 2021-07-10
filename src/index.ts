@@ -1,15 +1,12 @@
-import fs from "fs";
-import { IOpenAPI, IServer } from "./__types__/OpenAPI";
-import { putBackRefs } from "./core/putBackRefs";
-import { toFakeData } from "./core/toFakeData";
+import { IOpenAPI, IServer } from "OpenAPI";
+import { putBackRefs } from "./putBackRefs";
+import { toFakeData } from "./toFakeData";
 import { mapValues, upperCase, isEmpty, get } from "lodash";
 import { parse } from "url";
 import converter from "swagger2openapi";
-import {getFirstSuccessResponse} from "./core/utils";
+import { getFirstSuccessResponse, getInput } from "./utils";
 
-const getInput = (filePath: string) => JSON.parse(fs.readFileSync(filePath, "utf8")) as IOpenAPI;
-
-const fakerGenFromObj = (openapi: IOpenAPI) => {
+const fakerGenFromObj = (openapi: IOpenAPI, isRandom: boolean) => {
   const outputs: any[] = [];
 
   mapValues(openapi.paths, (pathItem, pathName) => {
@@ -28,7 +25,7 @@ const fakerGenFromObj = (openapi: IOpenAPI) => {
         path: `${getBasePathFromServers(openapi?.servers)}${pathName}`,
         method: upperCase(method),
         summary: schema.summary,
-        mocks: toFakeData(schemaWithoutRefs),
+        mocks: toFakeData(schemaWithoutRefs, isRandom),
       });
     });
   });
@@ -52,15 +49,11 @@ const fakerGenFromPath = (filePath: string) => {
   const input = getInput(filePath);
   if (input.swagger === "2.0") {
     return converter.convertObj(input, { path: true, warnOnly: true }).then((options: any) => {
-      return fakerGenFromObj(options.openapi);
+      return fakerGenFromObj(options.openapi, true);
     });
   }
 
-  return Promise.resolve(fakerGenFromObj(input));
+  return Promise.resolve(fakerGenFromObj(input, true));
 };
-
-// fakerGenFromPath("/Users/rrli/tw/gitRepo/swagger-faker/examples/openapi.json").then((v: any) => {
-//   console.log(v, "v");
-// });
 
 export { fakerGenFromObj, fakerGenFromPath };
