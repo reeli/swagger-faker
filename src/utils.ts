@@ -59,6 +59,8 @@ export const isJSON = (data: any) => {
   return typeof res === "object" && res !== null;
 };
 
+export const toRoutePattern = (route: string) => route.replace(/\{/gi, ":").replace(/\}/gi, "");
+
 export const isMatch = (routePattern: string) => (routePath: string) => {
   const regexp = pathToRegexp(routePattern);
   return !!regexp.exec(routePath);
