@@ -5,12 +5,12 @@ export const fakerGenFromObjExpectation1 = [
       {
         categories: [
           {
-            id: 1,
+            id: 123,
             name: "fake string",
           },
         ],
         contentType: "fake string",
-        id: 1,
+        id: 123,
         name: "fake string",
         reason: "fake string",
         tag: "fake string",
@@ -24,12 +24,12 @@ export const fakerGenFromObjExpectation1 = [
     mocks: {
       categories: [
         {
-          id: 1,
+          id: 123,
           name: "fake string",
         },
       ],
       contentType: "fake string",
-      id: 1,
+      id: 123,
       name: "fake string",
       reason: "fake string",
       tag: "fake string",
@@ -47,12 +47,12 @@ export const fakerGenFromObjExpectation1 = [
     mocks: {
       categories: [
         {
-          id: 1,
+          id: 123,
           name: "fake string",
         },
       ],
       contentType: "fake string",
-      id: 1,
+      id: 123,
       name: "fake string",
       reason: "fake string",
       tag: "fake string",

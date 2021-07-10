@@ -6,7 +6,7 @@ import { parse } from "url";
 import converter from "swagger2openapi";
 import { getFirstSuccessResponse, getInput } from "./utils";
 
-const fakerGenFromObj = (openapi: IOpenAPI, isRandom: boolean) => {
+const fakerGenFromObj = (openapi: IOpenAPI, isFixed: boolean) => {
   const outputs: any[] = [];
 
   mapValues(openapi.paths, (pathItem, pathName) => {
@@ -25,7 +25,7 @@ const fakerGenFromObj = (openapi: IOpenAPI, isRandom: boolean) => {
         path: `${getBasePathFromServers(openapi?.servers)}${pathName}`,
         method: upperCase(method),
         summary: schema.summary,
-        mocks: toFakeData(schemaWithoutRefs, isRandom),
+        mocks: toFakeData(schemaWithoutRefs, isFixed),
       });
     });
   });
@@ -49,11 +49,11 @@ const fakerGenFromPath = (filePath: string) => {
   const input = getInput(filePath);
   if (input.swagger === "2.0") {
     return converter.convertObj(input, { path: true, warnOnly: true }).then((options: any) => {
-      return fakerGenFromObj(options.openapi, true);
+      return fakerGenFromObj(options.openapi, false);
     });
   }
 
-  return Promise.resolve(fakerGenFromObj(input, true));
+  return Promise.resolve(fakerGenFromObj(input, false));
 };
 
 export { fakerGenFromObj, fakerGenFromPath };

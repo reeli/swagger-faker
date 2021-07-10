@@ -1,12 +1,12 @@
 import { SchemaWithoutRef } from "common";
 import {FakeDataGenerator} from "./generators";
 
-export const toFakeData = (schema: SchemaWithoutRef, isRandom:boolean): ReturnType<any> => {
+export const toFakeData = (schema: SchemaWithoutRef, isFixed:boolean): ReturnType<any> => {
   if (!schema) {
     return schema;
   }
 
-  const fakeData = FakeDataGenerator.of(isRandom);
+  const fakeData = FakeDataGenerator.of(isFixed);
 
   if (schema.type === "object" || schema.properties) {
     return fakeData.object(schema);
