@@ -12,3 +12,11 @@ export interface SchemaWithoutRef extends ISchema {
   propertyNames?: ISchema;
   additionalProperties?: ISchema | boolean;
 }
+
+export interface FakeGenOutput {
+  operationId: string;
+  path: string;
+  method: string;
+  summary?: string;
+  mocks?: any;
+}

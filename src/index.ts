@@ -6,9 +6,10 @@ import { parse } from "url";
 import converter from "swagger2openapi";
 import { getFirstSuccessResponse, getInput } from "./utils";
 import { Spec } from "swagger-schema-official";
+import { FakeGenOutput } from "common";
 
-const fromOpenApi = (openapi: IOpenAPI, isFixed: boolean) => {
-  const outputs: any[] = [];
+const fromOpenApi = (openapi: IOpenAPI, isFixed: boolean): FakeGenOutput[] => {
+  const outputs: FakeGenOutput[] = [];
 
   mapValues(openapi.paths, (pathItem, pathName) => {
     mapValues(pathItem, (schema, method) => {
@@ -21,6 +22,7 @@ const fromOpenApi = (openapi: IOpenAPI, isFixed: boolean) => {
           maxDepth: 4,
         },
       });
+
       outputs.push({
         operationId: schema.operationId,
         path: `${getBasePathFromServers(openapi?.servers)}${pathName}`,
@@ -56,7 +58,7 @@ const getBasePathFromServers = (servers?: IServer[]): string => {
   return parse(server?.url)?.pathname || "";
 };
 
-const fakerGenFromPath = (filePath: string) => {
+const fakerGenFromPath = (filePath: string): Promise<FakeGenOutput[]> => {
   const input = getInput(filePath);
   if (input.swagger === "2.0") {
     return converter

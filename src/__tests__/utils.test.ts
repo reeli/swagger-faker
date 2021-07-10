@@ -1,4 +1,4 @@
-import {getFirstSuccessResponse} from "../utils";
+import {getFirstSuccessResponse, isJSON} from "../utils";
 
 const mockResponses = {
   "200": {
@@ -32,5 +32,18 @@ describe("#getFirstSuccessResponse", () => {
       },
       description: "pet response",
     });
+  });
+});
+
+describe("#isJSON", () => {
+  it("should test json", () => {
+    expect(
+      isJSON({
+        description: "Future Data",
+        filename: "Granite hard",
+        open: false,
+        readable: true,
+      }),
+    ).toEqual(true);
   });
 });
