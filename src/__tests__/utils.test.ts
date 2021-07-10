@@ -1,4 +1,4 @@
-import {getFirstSuccessResponse, isJSON} from "../utils";
+import { getFirstSuccessResponse, isJSON, isMatch } from "../utils";
 
 const mockResponses = {
   "200": {
@@ -45,5 +45,12 @@ describe("#isJSON", () => {
         readable: true,
       }),
     ).toEqual(true);
+  });
+});
+
+describe("#isMatch", () => {
+  it("should return true if given route is match the route pattern", () => {
+    expect(isMatch("/api/v3/pets/:id")("/api/v3/pets/111")).toEqual(true);
+    expect(isMatch("/api/v3/pets/:id")("/api/v3/pets1/111")).toEqual(false);
   });
 });
