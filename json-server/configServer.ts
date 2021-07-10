@@ -10,17 +10,14 @@ const mockServerConfig = {
   outputFolder: "mock-server",
 };
 const dbPath = `${mockServerConfig.outputFolder}/db.js`;
-const routesPath = `${mockServerConfig.outputFolder}/routes.json`;
 const utilsPath = `${mockServerConfig.outputFolder}/utils.js`;
 const mockDataFolder = `${mockServerConfig.outputFolder}/data`;
 const middlewaresFolder = `${mockServerConfig.outputFolder}/middlewares`;
 
-const defaultDBStr = `
-module.exports = () => {
+const defaultDBStr = `module.exports = () => {
   return {};
 };
 `;
-const defaultRoutesStr = `{}`;
 const utilsStr = `const pathToRegexp = require("path-to-regexp");
 
 const isMatch = (routePattern) => (routePath) => {
@@ -48,10 +45,6 @@ const bootstrap = () => {
     fs.writeFileSync(dbPath, defaultDBStr);
   }
 
-  if (!fs.existsSync(routesPath)) {
-    fs.writeFileSync(routesPath, defaultRoutesStr);
-  }
-
   mockServerConfig.apiSpecsPaths.forEach((apiSpecsPath) => {
     fakerGenFromPath(apiSpecsPath).then((list) => {
       list.map((item) => {
@@ -66,22 +59,7 @@ const configJsonServer = (item: FakeGenOutput) => {
     return;
   }
 
-  if (item.method === "GET") {
-    handleGetRequest(item);
-  }
-
-  if (item.method === "POST" || item.method === "PUT" || item.method == "DELETE") {
-    handleNonGetRequest(item, "../utils", "../data", middlewaresFolder);
-  }
-};
-
-const handleGetRequest = (item: FakeGenOutput) => {
-  const operationId = camelCase(item.operationId);
-
-  generateMockFile(item.mocks, operationId, mockDataFolder);
-  // TODO: remove ./data later
-  writeDB(operationId, "./data");
-  writeRoutes(item, operationId);
+  handleRequest(item, "../utils", "../data", middlewaresFolder);
 };
 
 export const writeDB = (operationId: string, mockDataFolderPath: string) => {
@@ -99,7 +77,7 @@ const getRoutePath = (path: string, queryParams?: string[]) => {
   return !isEmpty(queryParams) ? `${path}?${queryList.join("&")}` : `${path}`;
 };
 
-export const writeRoutes = (req: FakeGenOutput, operationId: string) => {
+export const writeRoutes = (req: FakeGenOutput, operationId: string, routesPath: string) => {
   const routes = fs.readFileSync(routesPath, "utf-8");
   const routesObj = JSON.parse(routes);
   const newRoutes = routesObj[req.path]
@@ -112,9 +90,14 @@ export const writeRoutes = (req: FakeGenOutput, operationId: string) => {
   fs.writeFileSync(routesPath, JSON.stringify(newRoutes, null, 2));
 };
 
-const handleNonGetRequest = (item: FakeGenOutput, utilsPath: string, mockDataPath: string, middlewarePath: string) => {
+const handleRequest = (item: FakeGenOutput, utilsPath: string, mockDataPath: string, middlewarePath: string) => {
   const routePattern = getRoutePath(item.path);
   const operationId = camelCase(item.operationId);
+
+  if (!operationId) {
+    return;
+  }
+
   const resWithMockData = `
     const { isMatch } = require("${utilsPath}");
     const ${operationId} = require("${mockDataPath}/${operationId}.json");
