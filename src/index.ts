@@ -4,7 +4,7 @@ import { toFakeData } from "./toFakeData";
 import { mapValues, upperCase, isEmpty, get } from "lodash";
 import { parse } from "url";
 import converter from "swagger2openapi";
-import { getFirstSuccessResponse, getInput } from "./utils";
+import {getFirstSuccessResponse, getInput, toRoutePattern} from "./utils";
 import { Spec } from "swagger-schema-official";
 import { FakeGenOutput } from "common";
 
@@ -25,7 +25,7 @@ const fromOpenApi = (openapi: IOpenAPI, isFixed: boolean): FakeGenOutput[] => {
 
       outputs.push({
         operationId: schema.operationId,
-        path: `${getBasePathFromServers(openapi?.servers)}${pathName}`,
+        path: toRoutePattern(`${getBasePathFromServers(openapi?.servers)}${pathName}`),
         method: upperCase(method),
         summary: schema.summary,
         mocks: toFakeData(schemaWithoutRefs, isFixed),
