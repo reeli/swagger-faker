@@ -58,12 +58,12 @@ export const fakerGenFromObjExpectationFromOpenApi = [
       tag: "fake string",
     },
     operationId: "find pet by id",
-    path: "/api/v3/pets/{id}",
+    path: "/api/v3/pets/:id",
   },
   {
     method: "DELETE",
     operationId: "deletePet",
-    path: "/api/v3/pets/{id}",
+    path: "/api/v3/pets/:id",
   },
   {
     method: "X SWAGGER ROUTER CONTROLLER",
@@ -128,18 +128,36 @@ export const fakerGenFromObjExpectationFromOpenApi = [
 ];
 
 export const fakerGenFromObjExpectationFromSwagger = [
-  { method: "POST", mocks: undefined, operationId: "addPet", path: "/v2/pet", summary: "Add a new pet to the store" },
-  { method: "PUT", mocks: undefined, operationId: "updatePet", path: "/v2/pet", summary: "Update an existing pet" },
+  {
+    method: "POST",
+    operationId: "addPet",
+    path: "/v2/pet",
+    summary: "Add a new pet to the store",
+  },
+  {
+    method: "PUT",
+    operationId: "updatePet",
+    path: "/v2/pet",
+    summary: "Update an existing pet",
+  },
   {
     method: "GET",
     mocks: [
       {
-        category: { id: 123, name: "fake string" },
+        category: {
+          id: 123,
+          name: "fake string",
+        },
         id: 123,
         name: "fake string",
         photoUrls: ["fake string"],
         status: "fake string",
-        tags: [{ id: 123, name: "fake string" }],
+        tags: [
+          {
+            id: 123,
+            name: "fake string",
+          },
+        ],
       },
     ],
     operationId: "findPetsByStatus",
@@ -150,12 +168,20 @@ export const fakerGenFromObjExpectationFromSwagger = [
     method: "GET",
     mocks: [
       {
-        category: { id: 123, name: "fake string" },
+        category: {
+          id: 123,
+          name: "fake string",
+        },
         id: 123,
         name: "fake string",
         photoUrls: ["fake string"],
         status: "fake string",
-        tags: [{ id: 123, name: "fake string" }],
+        tags: [
+          {
+            id: 123,
+            name: "fake string",
+          },
+        ],
       },
     ],
     operationId: "findPetsByTags",
@@ -165,35 +191,53 @@ export const fakerGenFromObjExpectationFromSwagger = [
   {
     method: "GET",
     mocks: {
-      category: { id: 123, name: "fake string" },
+      category: {
+        id: 123,
+        name: "fake string",
+      },
       id: 123,
       name: "fake string",
       photoUrls: ["fake string"],
       status: "fake string",
-      tags: [{ id: 123, name: "fake string" }],
+      tags: [
+        {
+          id: 123,
+          name: "fake string",
+        },
+      ],
     },
     operationId: "getPetById",
-    path: "/v2/pet/{petId}",
+    path: "/v2/pet/:petId",
     summary: "Find pet by ID",
   },
   {
     method: "POST",
-    mocks: undefined,
     operationId: "updatePetWithForm",
-    path: "/v2/pet/{petId}",
+    path: "/v2/pet/:petId",
     summary: "Updates a pet in the store with form data",
   },
-  { method: "DELETE", mocks: undefined, operationId: "deletePet", path: "/v2/pet/{petId}", summary: "Deletes a pet" },
+  {
+    method: "DELETE",
+    operationId: "deletePet",
+    path: "/v2/pet/:petId",
+    summary: "Deletes a pet",
+  },
   {
     method: "POST",
-    mocks: { code: 123, message: "fake string", type: "fake string" },
+    mocks: {
+      code: 123,
+      message: "fake string",
+      type: "fake string",
+    },
     operationId: "uploadFile",
-    path: "/v2/pet/{petId}/uploadImage",
+    path: "/v2/pet/:petId/uploadImage",
     summary: "uploads an image",
   },
   {
     method: "GET",
-    mocks: {},
+    mocks: {
+      additionalProp: 123,
+    },
     operationId: "getInventory",
     path: "/v2/store/inventory",
     summary: "Returns pet inventories by status",
@@ -223,27 +267,29 @@ export const fakerGenFromObjExpectationFromSwagger = [
       status: "fake string",
     },
     operationId: "getOrderById",
-    path: "/v2/store/order/{orderId}",
+    path: "/v2/store/order/:orderId",
     summary: "Find purchase order by ID",
   },
   {
     method: "DELETE",
-    mocks: undefined,
     operationId: "deleteOrder",
-    path: "/v2/store/order/{orderId}",
+    path: "/v2/store/order/:orderId",
     summary: "Delete purchase order by ID",
   },
-  { method: "POST", mocks: undefined, operationId: "createUser", path: "/v2/user", summary: "Create user" },
   {
     method: "POST",
-    mocks: undefined,
+    operationId: "createUser",
+    path: "/v2/user",
+    summary: "Create user",
+  },
+  {
+    method: "POST",
     operationId: "createUsersWithArrayInput",
     path: "/v2/user/createWithArray",
     summary: "Creates list of users with given input array",
   },
   {
     method: "POST",
-    mocks: undefined,
     operationId: "createUsersWithListInput",
     path: "/v2/user/createWithList",
     summary: "Creates list of users with given input array",
@@ -257,7 +303,6 @@ export const fakerGenFromObjExpectationFromSwagger = [
   },
   {
     method: "GET",
-    mocks: undefined,
     operationId: "logoutUser",
     path: "/v2/user/logout",
     summary: "Logs out current logged in user session",
@@ -275,15 +320,19 @@ export const fakerGenFromObjExpectationFromSwagger = [
       username: "fake string",
     },
     operationId: "getUserByName",
-    path: "/v2/user/{username}",
+    path: "/v2/user/:username",
     summary: "Get user by user name",
   },
-  { method: "PUT", mocks: undefined, operationId: "updateUser", path: "/v2/user/{username}", summary: "Updated user" },
+  {
+    method: "PUT",
+    operationId: "updateUser",
+    path: "/v2/user/:username",
+    summary: "Updated user",
+  },
   {
     method: "DELETE",
-    mocks: undefined,
     operationId: "deleteUser",
-    path: "/v2/user/{username}",
+    path: "/v2/user/:username",
     summary: "Delete user",
   },
 ];
