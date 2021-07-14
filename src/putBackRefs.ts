@@ -1,6 +1,6 @@
 import { ISchema, IOpenAPI, IReference } from "OpenAPI";
 import { get, mapValues, isArray, isNumber, map, takeRight } from "lodash";
-import {getRef} from "./utils";
+import { getRef } from "./utils";
 
 interface Ctx {
   parents: string[];
@@ -24,7 +24,7 @@ const getPathsFromRef = (str?: string): string[] => {
 };
 
 export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnType<any> => {
-  if(!schema){
+  if (!schema) {
     return;
   }
 
@@ -57,10 +57,17 @@ export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnT
   }
 
   // handle object
-  if (schema?.type === "object" || schema.properties) {
+  if (schema?.type === "object" || schema.properties || schema.additionalProperties) {
+    const getProps = (properties: IOpenAPI["properties"]) => {
+      return mapValues(properties, (item) => putBackRefs({ schema: item, openApi, ctx }));
+    };
+
     return {
       ...schema,
-      properties: mapValues(schema.properties, (item) => putBackRefs({ schema: item, openApi, ctx })),
+      properties: {
+        ...(schema.properties ? getProps(schema.properties) : {}),
+        ...(schema.additionalProperties ? getProps({ additionalProp: schema.additionalProperties }) : {}),
+      },
     };
   }
 
@@ -85,8 +92,24 @@ export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnT
 
   // handle allOf
   if (schema.allOf) {
-    return map((schema as any).allOf, (item) => putBackRefs({ schema: item, openApi, ctx })).reduce(
-      (res, item) => ({
+    const allOfList = map((schema as any).allOf, (item) => putBackRefs({ schema: item, openApi, ctx }));
+    const hasString = allOfList.some((item) => item.type === "string");
+
+    if (hasString) {
+      return allOfList.reduce((res, item) => {
+        return {
+          ...res,
+          ...item,
+        };
+      }, {});
+    }
+
+    return allOfList.reduce((res, item) => {
+      if (item.type !== "object" && !item.properties) {
+        return res;
+      }
+
+      return {
         ...res,
         ...item,
         required: (res.required || []).concat(item.required),
@@ -94,11 +117,9 @@ export const putBackRefs = ({ schema, openApi, ctx }: PutBackRefParams): ReturnT
           ...res.properties,
           ...item.properties,
         },
-      }),
-      {},
-    );
+      };
+    }, {});
   }
 
   return schema;
 };
-

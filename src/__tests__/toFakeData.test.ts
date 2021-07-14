@@ -9,6 +9,8 @@ describe("faker", () => {
       return {
         random: {
           words: () => "string words",
+        },
+        datatype: {
           number: ({ min, max }: { min?: number; max?: number }) => {
             if (min && max) {
               return min;
