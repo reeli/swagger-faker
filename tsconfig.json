@@ -10,14 +10,14 @@
     "noUnusedParameters": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "outDir": "dist",
+    "outDir": ".output",
     "baseUrl": ".",
     "rootDir": ".",
     "resolveJsonModule": true,
     "paths": {
       "*": ["*", "src/__types__/*"]
-    }
+    },
+    "importHelpers": true
   },
-  "exclude": ["node_modules",
-    "source", "**/__tests__/**"]
+  "exclude": ["node_modules", "source", "**/__tests__/**"]
 }
