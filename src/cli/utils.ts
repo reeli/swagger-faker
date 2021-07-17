@@ -11,6 +11,7 @@ export const DEFAULT_CONFIG = {
   sourcePaths: [""],
   outputFolder: "mock-server",
   timeout: 3 * 60 * 1000,
+  port: 8081
 };
 
 export const readSwaggerFakerConfig = (configPath?: string): SwaggerFakerConfig => {

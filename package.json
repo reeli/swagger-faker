@@ -12,7 +12,7 @@
     "README.md"
   ],
   "scripts": {
-    "start": "rm -rf mock-server && ts-node json-server/configServer.ts",
+    "start": "ts-node src/cli/index.ts run",
     "mock": "npx json-server --watch mock-server/db.js --middlewares mock-server/middlewares/*.js",
     "test": "jest",
     "build": "rm -rf dist/ && tsc",
@@ -60,9 +60,10 @@
     "axios": "^0.21.1",
     "commander": "^7.2.x",
     "faker": "^5.5.3",
+    "json-server": "^0.16.3",
     "lodash": "^4.17.15",
     "path-to-regexp": "^6.2.0",
-    "prettier": "^2.2.1",
+    "prettier": "^2.3.2",
     "swagger2openapi": "^7.0.5"
   },
   "jest": {
