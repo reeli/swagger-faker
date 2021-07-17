@@ -2,6 +2,9 @@
   "name": "swagger-faker",
   "version": "2.0.0",
   "description": "Generate fake data from swagger",
+  "bin": {
+    "swagger-faker": "bin/cli.js"
+  },
   "main": "dist/lib/index.js",
   "module": "dist/module/index.js",
   "types": "src/index.ts",
