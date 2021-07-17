@@ -19,5 +19,5 @@
     }
   },
   "exclude": ["node_modules",
-    "data", "**/__tests__/**"]
+    "source", "**/__tests__/**"]
 }
