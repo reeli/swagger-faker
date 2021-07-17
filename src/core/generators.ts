@@ -1,5 +1,4 @@
 import faker from "faker";
-import { toFakeData } from "./toFakeData";
 import { SchemaWithoutRef } from "__types__/common";
 import { mapValues, isArray } from "lodash";
 
@@ -130,7 +129,7 @@ export class FakeDataGenerator {
   };
 
   object = (schema: SchemaWithoutRef) => {
-    return mapValues(schema.properties, (item) => toFakeData(item, this.isFixed));
+    return mapValues(schema.properties, (item) => this.toFakeData(item));
   };
 
   array = (schema: SchemaWithoutRef): ReturnType<any> => {
@@ -138,6 +137,61 @@ export class FakeDataGenerator {
       return schema.items.map((item) => this.object(item));
     }
 
-    return [toFakeData(schema.items!, this.isFixed)];
+    return [this.toFakeData(schema.items!)];
+  };
+
+  toFakeData = (schema: SchemaWithoutRef): ReturnType<any> => {
+    if (!schema) {
+      return schema;
+    }
+
+    if (schema.type === "object" || schema.properties) {
+      return this.object(schema);
+    }
+
+    if (schema.type === "array") {
+      return schema.items ? this.array(schema) : [];
+    }
+
+    if (schema.type === "boolean") {
+      return this.boolean();
+    }
+
+    if (schema.type === "integer" || schema.type === "number") {
+      return this.number();
+    }
+
+    if (schema.type === "string") {
+      if (schema.format === "date") {
+        return this.date();
+      }
+
+      if (schema.format === "time") {
+        return this.time();
+      }
+
+      if (schema.format === "date-time") {
+        return this.dateTime();
+      }
+      if (schema.format === "uri") {
+        return this.url();
+      }
+
+      if (schema.format === "ipv4") {
+        return this.ipv4();
+      }
+
+      if (schema.format === "ipv6") {
+        return this.ipv6();
+      }
+
+      if (schema.format === "email") {
+        return this.email();
+      }
+
+      return this.string();
+    }
+
+    return null;
   };
 }

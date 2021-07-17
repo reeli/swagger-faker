@@ -1,12 +1,12 @@
 import { IOpenAPI, IServer } from "__types__/OpenAPI";
 import { putBackRefs } from "./putBackRefs";
-import { toFakeData } from "./toFakeData";
 import { mapValues, upperCase, isEmpty, get } from "lodash";
 import { parse } from "url";
 import converter from "swagger2openapi";
-import {getFirstSuccessResponse, getInput, toRoutePattern} from "./utils";
+import { getFirstSuccessResponse, getInput, toRoutePattern } from "./utils";
 import { Spec } from "swagger-schema-official";
 import { FakeGenOutput } from "__types__/common";
+import { FakeDataGenerator } from "./generators";
 
 const fromOpenApi = (openapi: IOpenAPI, isFixed: boolean): FakeGenOutput[] => {
   const outputs: FakeGenOutput[] = [];
@@ -23,12 +23,13 @@ const fromOpenApi = (openapi: IOpenAPI, isFixed: boolean): FakeGenOutput[] => {
         },
       });
 
+      const fakeDataGenerator = FakeDataGenerator.of(isFixed);
       outputs.push({
         operationId: schema.operationId,
         path: toRoutePattern(`${getBasePathFromServers(openapi?.servers)}${pathName}`),
         method: upperCase(method),
         summary: schema.summary,
-        mocks: toFakeData(schemaWithoutRefs, isFixed),
+        mocks: fakeDataGenerator.toFakeData(schemaWithoutRefs),
       });
     });
   });
