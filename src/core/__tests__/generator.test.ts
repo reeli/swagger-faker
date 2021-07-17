@@ -2,6 +2,7 @@ import { putBackRefs } from "../putBackRefs";
 import { IOpenAPI } from "../../../__types__/OpenAPI";
 import openApi from "./mocks/openapi.json";
 import { mockOpenApi } from "./mocks/mocks";
+import {FakeDataGenerator} from "../generators";
 
 describe("faker", () => {
   beforeAll(() => {
@@ -46,7 +47,7 @@ describe("faker", () => {
   });
 
   it("should generate correct fake data if given schema contains array", () => {
-    const { toFakeData } = require("../toFakeData");
+    const { FakeDataGenerator } = require("../generators");
 
     const input = putBackRefs({
       schema: {
@@ -63,7 +64,9 @@ describe("faker", () => {
       },
     });
 
-    expect(toFakeData(input)).toEqual([
+    const generator = FakeDataGenerator.of(false);
+
+    expect(generator.toFakeData(input)).toEqual([
       {
         categories: [
           {
@@ -81,7 +84,7 @@ describe("faker", () => {
   });
 
   it("should generate correct fake data if given schema contains circular ref", () => {
-    const { toFakeData } = require("../toFakeData");
+    const { FakeDataGenerator } = require("../generators");
 
     const input = putBackRefs({
       schema: {
@@ -95,7 +98,9 @@ describe("faker", () => {
       },
     });
 
-    expect(toFakeData(input)).toEqual({
+    const generator = FakeDataGenerator.of(false);
+
+    expect(generator.toFakeData(input)).toEqual({
       id: "string words",
       item: {
         children: {
