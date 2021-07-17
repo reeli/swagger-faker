@@ -15,7 +15,7 @@
     "rootDir": ".",
     "resolveJsonModule": true,
     "paths": {
-      "*": ["*", "src/__types__/*"]
+      "*": ["*", "__types__/*"]
     },
     "importHelpers": true
   },
