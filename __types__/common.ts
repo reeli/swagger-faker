@@ -20,3 +20,9 @@ export interface FakeGenOutput {
   summary?: string;
   mocks?: any;
 }
+
+export interface SwaggerFakerConfig {
+  sourcePaths: string[];
+  outputFolder: string;
+  timeout: number;
+}

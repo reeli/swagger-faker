@@ -1,4 +1,4 @@
-import { SchemaWithoutRef } from "common";
+import { SchemaWithoutRef } from "__types__/common";
 import {FakeDataGenerator} from "./generators";
 
 export const toFakeData = (schema: SchemaWithoutRef, isFixed:boolean): ReturnType<any> => {

@@ -1,4 +1,4 @@
-import { ISchema, IOpenAPI, IReference } from "OpenAPI";
+import { ISchema, IOpenAPI, IReference } from "__types__/OpenAPI";
 import { get, mapValues, isArray, isNumber, map, takeRight } from "lodash";
 import { getRef } from "./utils";
 

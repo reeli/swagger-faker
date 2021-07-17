@@ -1,7 +1,7 @@
 import {fakerGenFromObj} from "../index";
 import openApi from "./mocks/openapi.json";
 import swagger from "./mocks/swagger.json";
-import {IOpenAPI} from "../__types__/OpenAPI";
+import {IOpenAPI} from "../../../__types__/OpenAPI";
 import {
   fakerGenFromObjExpectationFromSwagger,
   fakerGenFromObjExpectationFromOpenApi,

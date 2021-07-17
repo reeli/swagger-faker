@@ -1,18 +1,9 @@
 import * as fs from "fs";
 import { isEmpty, map, camelCase } from "lodash";
-import { fakerGenFromPath } from "../src";
-import { generateMockFile, isJSON } from "../src/utils";
-import { FakeGenOutput } from "common";
+import { fakerGenFromPath } from "../core";
+import { generateMockFile, isJSON } from "../core/utils";
 import { prettifyCode, insertStrToDB } from "./utils";
-
-const mockServerConfig = {
-  apiSpecsPaths: ["./data/openapi.json"],
-  outputFolder: "mock-server",
-};
-const dbPath = `${mockServerConfig.outputFolder}/db.js`;
-const utilsPath = `${mockServerConfig.outputFolder}/utils.js`;
-const mockDataFolder = `${mockServerConfig.outputFolder}/data`;
-const middlewaresFolder = `${mockServerConfig.outputFolder}/middlewares`;
+import {FakeGenOutput, SwaggerFakerConfig} from "../../__types__/common";
 
 const defaultDBStr = `module.exports = () => {
   return {};
@@ -28,9 +19,14 @@ const isMatch = (routePattern) => (routePath) => {
 module.exports = { isMatch };
 `;
 
-const bootstrap = () => {
-  if (!fs.existsSync(mockServerConfig.outputFolder)) {
-    fs.mkdirSync(mockServerConfig.outputFolder, { recursive: true });
+export const jsonServerGen = (swaggerFakerConfig: SwaggerFakerConfig) => {
+  const dbPath = `${swaggerFakerConfig.outputFolder}/db.js`;
+  const utilsPath = `${swaggerFakerConfig.outputFolder}/utils.js`;
+  const mockDataFolder = `${swaggerFakerConfig.outputFolder}/data`;
+  const middlewaresFolder = `${swaggerFakerConfig.outputFolder}/middlewares`;
+
+  if (!fs.existsSync(swaggerFakerConfig.outputFolder)) {
+    fs.mkdirSync(swaggerFakerConfig.outputFolder, { recursive: true });
   }
 
   if (!fs.existsSync(middlewaresFolder)) {
@@ -45,31 +41,21 @@ const bootstrap = () => {
     fs.writeFileSync(dbPath, defaultDBStr);
   }
 
-  mockServerConfig.apiSpecsPaths.forEach((apiSpecsPath) => {
+  swaggerFakerConfig.sourcePaths.forEach((apiSpecsPath) => {
     fakerGenFromPath(apiSpecsPath).then((list) => {
       list.map((item) => {
-        configJsonServer(item);
+        configJsonServer(item, middlewaresFolder, mockDataFolder);
       });
     });
   });
 };
 
-const configJsonServer = (item: FakeGenOutput) => {
+const configJsonServer = (item: FakeGenOutput, middlewaresFolder:string, mockDataFolder:string) => {
   if (!item) {
     return;
   }
 
-  handleRequest(item, "../utils", "../data", middlewaresFolder);
-};
-
-export const writeDB = (operationId: string, mockDataFolderPath: string) => {
-  const fileStr = fs.readFileSync(dbPath, "utf-8");
-  const result = insertStrToDB(fileStr, operationId, mockDataFolderPath);
-
-  if (result && result.code) {
-    const code = prettifyCode(result.code);
-    fs.writeFileSync(dbPath, code);
-  }
+  handleRequest(item, "../utils", "../data", middlewaresFolder, mockDataFolder);
 };
 
 const getRoutePath = (path: string, queryParams?: string[]) => {
@@ -90,7 +76,7 @@ export const writeRoutes = (req: FakeGenOutput, operationId: string, routesPath:
   fs.writeFileSync(routesPath, JSON.stringify(newRoutes, null, 2));
 };
 
-const handleRequest = (item: FakeGenOutput, utilsPath: string, mockDataPath: string, middlewarePath: string) => {
+const handleRequest = (item: FakeGenOutput, utilsPath: string, mockDataPath: string, middlewarePath: string, mockDataFolder:string) => {
   const routePattern = getRoutePath(item.path);
   const operationId = camelCase(item.operationId);
 
@@ -131,4 +117,12 @@ const handleRequest = (item: FakeGenOutput, utilsPath: string, mockDataPath: str
   fs.writeFileSync(`${middlewarePath}/${operationId}.js`, prettifyCode(code));
 };
 
-bootstrap();
+export const writeDB = (operationId: string, mockDataFolderPath: string, dbPath:string) => {
+  const fileStr = fs.readFileSync(dbPath, "utf-8");
+  const result = insertStrToDB(fileStr, operationId, mockDataFolderPath);
+
+  if (result && result.code) {
+    const code = prettifyCode(result.code);
+    fs.writeFileSync(dbPath, code);
+  }
+};
