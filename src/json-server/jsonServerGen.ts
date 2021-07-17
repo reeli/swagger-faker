@@ -9,7 +9,7 @@ const defaultDBStr = `module.exports = () => {
   return {};
 };
 `;
-const utilsStr = `const pathToRegexp = require("path-to-regexp");
+const utilsStr = `const { pathToRegexp } = require("path-to-regexp");
 
 const isMatch = (routePattern) => (routePath) => {
   const regexp = pathToRegexp(routePattern);
