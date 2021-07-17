@@ -1,6 +1,6 @@
 import faker from "faker";
 import { toFakeData } from "./toFakeData";
-import { SchemaWithoutRef } from "common";
+import { SchemaWithoutRef } from "__types__/common";
 import { mapValues, isArray } from "lodash";
 
 const booleanGenerator = () => faker.datatype.boolean();

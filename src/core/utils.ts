@@ -1,7 +1,7 @@
-import { IReference, IComponents, IResponse, IOpenAPI } from "OpenAPI";
+import { IReference, IComponents, IResponse, IOpenAPI } from "__types__/OpenAPI";
 import { Dictionary, first, values, keys } from "lodash";
 import fs from "fs";
-import pathToRegexp from "path-to-regexp";
+import {pathToRegexp} from "path-to-regexp";
 
 export const getRef = (v: any): v is IReference => v?.$ref;
 

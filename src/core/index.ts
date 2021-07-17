@@ -1,4 +1,4 @@
-import { IOpenAPI, IServer } from "OpenAPI";
+import { IOpenAPI, IServer } from "__types__/OpenAPI";
 import { putBackRefs } from "./putBackRefs";
 import { toFakeData } from "./toFakeData";
 import { mapValues, upperCase, isEmpty, get } from "lodash";
@@ -6,7 +6,7 @@ import { parse } from "url";
 import converter from "swagger2openapi";
 import {getFirstSuccessResponse, getInput, toRoutePattern} from "./utils";
 import { Spec } from "swagger-schema-official";
-import { FakeGenOutput } from "common";
+import { FakeGenOutput } from "__types__/common";
 
 const fromOpenApi = (openapi: IOpenAPI, isFixed: boolean): FakeGenOutput[] => {
   const outputs: FakeGenOutput[] = [];
