@@ -1,4 +1,0 @@
-{
-  "/api/web/test/:id": "./testVO",
-  "/api/test/api/test/:id": "./downloadUsingGET"
-}

@@ -2,8 +2,11 @@
   "name": "swagger-faker",
   "version": "2.0.0",
   "description": "Generate fake data from swagger",
-  "main": "lib/index.js",
-  "module": "module/index.js",
+  "bin": {
+    "swagger-faker": "bin/cli.js"
+  },
+  "main": "dist/lib/index.js",
+  "module": "dist/module/index.js",
   "types": "src/index.ts",
   "files": [
     "lib",
@@ -12,10 +15,11 @@
     "README.md"
   ],
   "scripts": {
-    "start": "ts-node examples/command.ts",
+    "start": "ts-node src/cli/index.ts run",
+    "mock": "npx json-server --watch mock-server/db.js --middlewares mock-server/middlewares/*.js",
     "test": "jest",
-    "build": "rm -rf dist/ && tsc",
-    "release": "rm -rf lib/ && rm -rf module/ && rollup -c rollup.config.ts",
+    "build": "rm -rf .output/ && tsc",
+    "release": "rm -rf dist/ && rollup -c rollup.config.ts",
     "prepare": "npm run release && npm test"
   },
   "repository": {
@@ -23,59 +27,44 @@
     "url": "git@github.com:reeli/swagger-faker.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "git@github.com:reeli/swagger-faker.git"
   },
   "homepage": "git@github.com:reeli/swagger-faker.git",
   "devDependencies": {
-    "@babel/core": "7.6.0",
-    "@babel/parser": "7.6.0",
-    "@babel/preset-env": "7.6.0",
-    "@babel/preset-typescript": "7.6.0",
-    "@babel/traverse": "7.6.0",
-    "@babel/types": "7.6.1",
+    "@babel/core": "^7.14.6",
+    "@babel/parser": "^7.14.7",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-typescript": "^7.14.5",
+    "@babel/traverse": "^7.14.7",
+    "@babel/types": "^7.14.5",
+    "@changesets/cli": "^2.16.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-typescript": "^8.2.3",
     "@types/axios": "0.14.0",
-    "@types/faker": "4.1.5",
+    "@types/faker": "^5.5.7",
     "@types/jest": "24.0.18",
     "@types/lodash": "4.14.138",
-    "lodash": "4.17.15",
     "@types/node": "12.7.5",
-    "@types/path-to-regexp": "1.7.0",
     "@types/prettier": "1.18.2",
-    "axios": "0.19.0",
-    "babel-jest": "24.9.0",
-    "commander": "3.0.1",
-    "jest": "24.9.0",
-    "path-to-regexp": "3.1.0",
-    "prettier": "1.18.2",
-    "ts-node": "8.4.1",
-    "typescript": "3.6.3",
     "@types/rollup": "0.54.x",
-    "tslib": "1.10.0",
+    "@types/swagger-schema-official": "^2.0.22",
+    "babel-jest": "24.9.0",
     "babel-plugin-pure-calls-annotation": "0.2.x",
-    "rollup": "1.21.x",
-    "rollup-plugin-babel": "4.3.x",
-    "rollup-plugin-typescript": "1.0.x"
+    "jest": "^27.0.6",
+    "rollup": "^2.53.2",
+    "ts-node": "8.4.1",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@ts-tool/ts-codegen": "0.7.7",
-    "@types/swagger-schema-official": "2.0.x",
-    "faker": "4.1.x"
-  },
-  "peerDependencies": {
-    "lodash": ">=4.17.0",
-    "tslib": ">=1.9.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coverageDirectory": "coverage",
-    "testRegex": ".*/__tests__/.+\\.(generator|test|spec)\\.(ts|tsx)$",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.{ts,tsx}",
-      "!src/__types__/**",
-      "!src/__tests__/**"
-    ]
+    "axios": "^0.21.1",
+    "commander": "^7.2.x",
+    "faker": "^5.5.3",
+    "json-server": "^0.16.3",
+    "lodash": "^4.17.15",
+    "path-to-regexp": "^6.2.0",
+    "prettier": "^2.3.2",
+    "swagger2openapi": "^7.0.5"
   }
 }
