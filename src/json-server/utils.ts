@@ -3,7 +3,7 @@ import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { transformFromAstSync } from "@babel/core";
-import {pathToRegexp} from "path-to-regexp";
+import { pathToRegexp } from "path-to-regexp";
 
 export const prettifyCode = (code: string) =>
   prettier.format(code, {
@@ -13,7 +13,7 @@ export const prettifyCode = (code: string) =>
     parser: "babel",
   });
 
-export const insertStrToDB = (fileStr: string, propName: string, mockDataFolderPath:string) => {
+export const insertStrToDB = (fileStr: string, propName: string, mockDataFolderPath: string) => {
   let beforeReturn: any;
   let isExists: boolean = false;
 
@@ -40,7 +40,9 @@ export const insertStrToDB = (fileStr: string, propName: string, mockDataFolderP
   }
 
   if (beforeReturn) {
-    beforeReturn.insertBefore(parse(`const ${propName} = require("${mockDataFolderPath}/${propName}.json");`, { sourceType: "module" }));
+    beforeReturn.insertBefore(
+      parse(`const ${propName} = require("${mockDataFolderPath}/${propName}.json");`, { sourceType: "module" }),
+    );
   }
 
   return transformFromAstSync(ast, undefined, { compact: true });

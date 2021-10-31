@@ -21,7 +21,5 @@ module.exports = {
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
   ],
-  plugins: [
-    rollupTypeScript({target:"es5",module: "es6"}),
-  ],
+  plugins: [rollupTypeScript({ target: "es5", module: "es6" })],
 };

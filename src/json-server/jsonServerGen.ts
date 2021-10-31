@@ -3,7 +3,7 @@ import { isEmpty, map, camelCase } from "lodash";
 import { fakerGenFromPath } from "../core";
 import { generateMockFile, isJSON } from "../core/utils";
 import { prettifyCode, insertStrToDB } from "./utils";
-import {FakeGenOutput, SwaggerFakerConfig} from "../../__types__/common";
+import { FakeGenOutput, SwaggerFakerConfig } from "../../__types__/common";
 
 const defaultDBStr = `module.exports = () => {
   return {};
@@ -50,7 +50,7 @@ export const jsonServerGen = (swaggerFakerConfig: SwaggerFakerConfig) => {
   });
 };
 
-const configJsonServer = (item: FakeGenOutput, middlewaresFolder:string, mockDataFolder:string) => {
+const configJsonServer = (item: FakeGenOutput, middlewaresFolder: string, mockDataFolder: string) => {
   if (!item) {
     return;
   }
@@ -76,7 +76,13 @@ export const writeRoutes = (req: FakeGenOutput, operationId: string, routesPath:
   fs.writeFileSync(routesPath, JSON.stringify(newRoutes, null, 2));
 };
 
-const handleRequest = (item: FakeGenOutput, utilsPath: string, mockDataPath: string, middlewarePath: string, mockDataFolder:string) => {
+const handleRequest = (
+  item: FakeGenOutput,
+  utilsPath: string,
+  mockDataPath: string,
+  middlewarePath: string,
+  mockDataFolder: string,
+) => {
   const routePattern = getRoutePath(item.path);
   const operationId = camelCase(item.operationId);
 
@@ -117,7 +123,7 @@ const handleRequest = (item: FakeGenOutput, utilsPath: string, mockDataPath: str
   fs.writeFileSync(`${middlewarePath}/${operationId}.js`, prettifyCode(code));
 };
 
-export const writeDB = (operationId: string, mockDataFolderPath: string, dbPath:string) => {
+export const writeDB = (operationId: string, mockDataFolderPath: string, dbPath: string) => {
   const fileStr = fs.readFileSync(dbPath, "utf-8");
   const result = insertStrToDB(fileStr, operationId, mockDataFolderPath);
 
