@@ -17,7 +17,7 @@
     "paths": {
       "*": ["*", "__types__/*"]
     },
-    "importHelpers": true
+    "importHelpers": false
   },
   "exclude": ["node_modules", "source", "**/__tests__/**"]
 }

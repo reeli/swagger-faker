@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import fs from "fs";
 import { isEmpty, map, camelCase } from "lodash";
 import { fakerGenFromPath } from "../core";
 import { generateMockFile, isJSON } from "../core/utils";
