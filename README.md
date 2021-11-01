@@ -1,6 +1,6 @@
 # Swagger Faker
 
-[![Build Status](https://travis-ci.com/reeli/swagger-faker.svg?branch=master&status=created)](https://travis-ci.com/github/reeli/swagger-faker)
+![Build Status](https://github.com/reeli/swagger-faker/actions/workflows/deploy.yml/badge.svg)
 [![codecov](https://codecov.io/gh/reeli/swagger-faker/branch/master/graph/badge.svg?style=flat-square)](https://codecov.io/gh/reeli/swagger-faker)
 [![License](https://img.shields.io/npm/l/swagger-faker.svg?style=flat-square)](https://npmjs.org/package/@ts-tool/swagger-faker)
 [![NPM](https://img.shields.io/npm/v/swagger-faker.svg?style=flat-square)](https://npmjs.org/package/@ts-tool/swagger-faker)
