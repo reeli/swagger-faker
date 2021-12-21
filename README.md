@@ -5,104 +5,41 @@
 [![License](https://img.shields.io/npm/l/swagger-faker.svg?style=flat-square)](https://npmjs.org/package/@ts-tool/swagger-faker)
 [![NPM](https://img.shields.io/npm/v/swagger-faker.svg?style=flat-square)](https://npmjs.org/package/@ts-tool/swagger-faker)
 
-Swagger Faker is a tool which can help you generate fake data from your swagger.json file.
+Swagger Faker is a tool which can help you generate fake data from your swagger.json file, then it will start a mock server automatically with the generated fake data.
 
 ## How to Use
 
-Example Swagger.json
+1. Install
+
+```shell
+npm i swagger-faker -g
+```
+
+2. Init config file by command:
+
+```shell
+swagger-faker init
+```
+
+Then it will generate a config file `swagger-faker.config.json` in current path, update that config file:
 
 ```json
 {
-  "swagger": "2.0",
-  "info": {},
-  "host": "petstore.swagger.io",
-  "basePath": "/v2",
-  "tags": [],
-  "schemes": ["https", "http"],
-  "paths": {
-    "/pet/findByStatus": {
-      "get": {
-        "tags": ["pet"],
-        "summary": "Finds Pets by status",
-        "description": "Multiple status values can be provided with comma separated strings",
-        "operationId": "findPetsByStatus",
-        "produces": ["application/xml", "application/json"],
-        "parameters": [
-          {
-            "name": "status",
-            "in": "query",
-            "description": "Status values that need to be considered for filter",
-            "required": true,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["available", "pending", "sold"],
-              "default": "available"
-            },
-            "collectionFormat": "multi"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Pet"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid status value"
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": ["write:pets", "read:pets"]
-          }
-        ]
-      }
-    }
-  },
-  "externalDocs": {}
+  "sourcePaths": ["./source/openapi.json"], // required, put your swagger/openapi file path here
+  "outputFolder": "mock-server", // optional
+  "timeout": 180000, // optional
+  "port": 8081 // optional
 }
 ```
 
-We can get mock data by passing the swagger and operationId(findPetsByStatus):
+3. Generate fake data
 
-```js
-import { getRequestConfigByOperationId } from "swagger-faker";
-
-const request = getRequestConfigByOperationId(swagger, "findPetsByStatus");
-
-console.log(request);
+```shell
+swagger-faker gen
 ```
 
-Then we can get the output for the operationId (findPetsByStatus):
+4. Start the mock server
 
-```json
-{
-  "path": "/pet/findByStatus",
-  "basePath": "/v2",
-  "method": "get",
-  "response": [
-    {
-      "id": 93645,
-      "category": {
-        "id": 85609,
-        "name": "open-source"
-      },
-      "name": "doggie",
-      "photoUrls": ["firewall Berkshire withdrawal"],
-      "tags": [
-        {
-          "id": 13201,
-          "name": "Salad synthesize e-business"
-        }
-      ],
-      "status": "pending"
-    }
-  ],
-  "queryParams": ["status"]
-}
+```shell
+swagger-faker run
 ```
