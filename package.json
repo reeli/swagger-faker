@@ -15,7 +15,7 @@
     "README.md"
   ],
   "scripts": {
-    "start": "ts-node src/cli/index.ts run",
+    "start": "ts-node src/cli/index.ts gen && ts-node src/cli/index.ts run",
     "mock": "npx json-server --watch mock-server/db.js --middlewares mock-server/middlewares/*.js",
     "test": "jest",
     "build": "rm -rf .output/ && tsc",

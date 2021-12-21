@@ -2,7 +2,7 @@ import fs from "fs";
 import { isEmpty, map, camelCase } from "lodash";
 import { fakerGenFromPath } from "../core";
 import { generateMockFile, isJSON } from "../core/utils";
-import { prettifyCode, insertStrToDB } from "./utils";
+import { prettifyCode } from "./utils";
 import { FakeGenOutput, SwaggerFakerConfig } from "../../__types__/common";
 
 const defaultDBStr = `module.exports = () => {
@@ -63,18 +63,6 @@ const getRoutePath = (path: string, queryParams?: string[]) => {
   return !isEmpty(queryParams) ? `${path}?${queryList.join("&")}` : `${path}`;
 };
 
-export const writeRoutes = (req: FakeGenOutput, operationId: string, routesPath: string) => {
-  const routes = fs.readFileSync(routesPath, "utf-8");
-  const routesObj = JSON.parse(routes);
-  const newRoutes = routesObj[req.path]
-    ? routesObj
-    : {
-        ...routesObj,
-        [getRoutePath(req.path)]: `./${operationId}`,
-      };
-
-  fs.writeFileSync(routesPath, JSON.stringify(newRoutes, null, 2));
-};
 
 const handleRequest = (
   item: FakeGenOutput,
@@ -121,14 +109,4 @@ const handleRequest = (
 
   generateMockFile(item.mocks, operationId, mockDataFolder);
   fs.writeFileSync(`${middlewarePath}/${operationId}.js`, prettifyCode(code));
-};
-
-export const writeDB = (operationId: string, mockDataFolderPath: string, dbPath: string) => {
-  const fileStr = fs.readFileSync(dbPath, "utf-8");
-  const result = insertStrToDB(fileStr, operationId, mockDataFolderPath);
-
-  if (result && result.code) {
-    const code = prettifyCode(result.code);
-    fs.writeFileSync(dbPath, code);
-  }
 };

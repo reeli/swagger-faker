@@ -1,6 +1,6 @@
 {
-  "sources": ["./source/openapi.json"],
-  "output": "mock-server",
+  "sourcePaths": ["./source/openapi.json", "./source/swagger1.json"],
+  "outputFolder": "mock-server",
   "timeout": 180000,
   "port": 8081
 }
