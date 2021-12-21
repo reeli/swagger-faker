@@ -23,7 +23,7 @@ swagger-faker init
 
 Then it will generate a config file `swagger-faker.config.json` in current path, update that config file:
 
-```json
+```json5
 {
   "sourcePaths": ["./source/openapi.json"], // required, put your swagger/openapi file path here
   "outputFolder": "mock-server", // optional
