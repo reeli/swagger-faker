@@ -44,6 +44,7 @@
     "@types/faker": "^5.5.9",
     "@types/inquirer": "^8.1.3",
     "@types/jest": "27.0.2",
+    "@types/json-server": "^0.14.4",
     "@types/lodash": "4.14.176",
     "@types/node": "16.11.6",
     "@types/prettier": "2.4.1",

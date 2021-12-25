@@ -25,4 +25,5 @@ export interface SwaggerFakerConfig {
   sourcePaths: string[];
   outputFolder: string;
   timeout: number;
+  port: number;
 }
