@@ -145,6 +145,8 @@ export class FakeDataGenerator {
       return schema;
     }
 
+    if(schema.example) return schema.example
+
     if (schema.type === "object" || schema.properties) {
       return this.object(schema);
     }
