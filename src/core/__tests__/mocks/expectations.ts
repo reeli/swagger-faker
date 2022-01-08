@@ -149,7 +149,7 @@ export const fakerGenFromObjExpectationFromSwagger = [
           name: "fake string",
         },
         id: 123,
-        name: "fake string",
+        name: "doggie",
         photoUrls: ["fake string"],
         status: "fake string",
         tags: [
@@ -173,7 +173,7 @@ export const fakerGenFromObjExpectationFromSwagger = [
           name: "fake string",
         },
         id: 123,
-        name: "fake string",
+        name: "doggie",
         photoUrls: ["fake string"],
         status: "fake string",
         tags: [
@@ -196,7 +196,7 @@ export const fakerGenFromObjExpectationFromSwagger = [
         name: "fake string",
       },
       id: 123,
-      name: "fake string",
+      name: "doggie",
       photoUrls: ["fake string"],
       status: "fake string",
       tags: [
