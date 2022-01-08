@@ -1,6 +1,6 @@
 {
   "name": "swagger-faker",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Generate mocker services automatically through Swagger or OpenAPI",
   "bin": {
     "swagger-faker": "bin/cli.js"
