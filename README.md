@@ -23,14 +23,19 @@ swagger-faker init
 
 Then it will generate a config file `swagger-faker.config.json` in current path, update that config file:
 
-```json5
+```json
 {
-  "sourcePaths": ["./source/openapi.json"], // required, put your swagger/openapi file path here
-  "outputFolder": "mock-server", // optional
-  "timeout": 180000, // optional
-  "port": 8081 // optional
+  "sourcePaths": ["./source/openapi.json"],
+  "outputFolder": "mock-server",
+  "timeout": 180000,
+  "port": 8081
 }
 ```
+
+- **sourcePaths**: `required`, put your swagger/openapi file path here
+- **outputFolder**: `optional`
+- **timeout**: `optional`,
+- **port**: `optional`
 
 3. Generate fake data
 
@@ -55,5 +60,5 @@ npm start
 
 Then you'll see:
 
-1. A `mock-server` folder is generated in your current path, and all mock data is setting in `mock-server/data` folder, you can customize them if needed.
-2. A mock server is started in `http://localhost:8081`, you can open your browser and visit one of the mock API by `http://localhost:8081/api/v2/store/order/1` (The mock data is setting in: `mock-server/data/getOrderById.json`)
+1. A `mock-server` folder has been generated in your current path, and all mock data is setting in `mock-server/data` folder, you can customize them if needed.
+2. A mock server has been started in `http://localhost:8081`, you can open your browser and visit one of the mock API by `http://localhost:8081/api/v2/store/order/1` (The mock data is setting in: `mock-server/data/getOrderById.json`)
