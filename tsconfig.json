@@ -19,5 +19,10 @@
     },
     "importHelpers": false
   },
+  "typedocOptions": {
+    "entryPoints": ["src/index.ts"],
+    "exclude": ["**/__types__/*.ts"],
+    "out": "docs"
+  },
   "exclude": ["node_modules", "source", "**/__tests__/**"]
 }
