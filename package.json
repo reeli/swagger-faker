@@ -22,7 +22,7 @@
     "release": "rm -rf dist/ && rollup -c rollup.config.ts",
     "prepare": "npm run release && npm test",
     "copy": "cp docs/index.html docs/404.html",
-    "doc": "typedoc && pnpm copy"
+    "doc": "typedoc"
   },
   "repository": {
     "type": "git",
