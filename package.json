@@ -15,7 +15,7 @@
     "README.md"
   ],
   "scripts": {
-    "prepare": "make release"
+    "prepare": "pnpm test && make release"
   },
   "repository": {
     "type": "git",

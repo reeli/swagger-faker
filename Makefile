@@ -13,7 +13,6 @@ build:
 	tsc
 
 release:
-	pnpm test
 	rm -rf dist/
 	rollup -c rollup.config.ts
 

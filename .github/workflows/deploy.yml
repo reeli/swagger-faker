@@ -24,7 +24,7 @@ jobs:
           pnpm test
 
       - name: Build
-        run: pnpm release
+        run: pnpm build
 
       - name: Genearete doc
         run: pnpm doc
