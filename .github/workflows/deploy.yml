@@ -21,13 +21,13 @@ jobs:
         run: |
           npm install pnpm -g
           pnpm install
-          pnpm test
+          make test
 
       - name: Build
-        run: pnpm build
+        run: make build
 
       - name: Genearete doc
-        run: pnpm doc
+        run: make doc
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.5
