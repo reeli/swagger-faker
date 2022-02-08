@@ -1,6 +1,0 @@
-{
-  "sourcePaths": ["./source/openapi.json"],
-  "outputFolder": "mock-server",
-  "timeout": 180000,
-  "port": 8081
-}
