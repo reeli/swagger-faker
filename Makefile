@@ -1,22 +1,22 @@
 dev:
-	ts-node src/cli/index.ts gen
-	ts-node src/cli/index.ts run
+	pnpx ts-node src/cli/index.ts gen
+	pnpx ts-node src/cli/index.ts run
 
 mock:
-	npx json-server --watch mock-server/db.js --middlewares mock-server/middlewares/*.js
+	pnpx json-server --watch mock-server/db.js --middlewares mock-server/middlewares/*.js
 
 test:
-	jest
+	pnpx jest
 
 build:
 	rm -rf .output/
-	tsc
+	pnpx tsc
 
 release:
 	rm -rf dist/
-	rollup -c rollup.config.ts
+	pnpx rollup -c rollup.config.ts
 
 release_doc:
 	rm -rf docs
-	typedoc
-	ts-node scripts/doc.ts
+	pnpx typedoc
+	pnpx ts-node scripts/doc.ts
