@@ -8,12 +8,9 @@ mock:
 test:
 	pnpx jest
 
-build:
-	rm -rf .output/
-	pnpx tsc
-
 release:
 	rm -rf dist/
+	pnpx tsc
 	pnpx rollup -c rollup.config.ts
 
 release_doc:

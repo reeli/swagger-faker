@@ -23,11 +23,11 @@ jobs:
           pnpm install
           make test
 
-      - name: Build
-        run: make build
+      - name: Release app
+        run: make release
 
-      - name: Genearete doc
-        run: make doc
+      - name: Release doc
+        run: make release_doc
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.5
