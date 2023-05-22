@@ -15,7 +15,7 @@
     "README.md"
   ],
   "scripts": {
-    "prepare": "make test && make release"
+    "prepublishOnly": "make test && make release"
   },
   "repository": {
     "type": "git",
