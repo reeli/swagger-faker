@@ -1,14 +1,14 @@
-import faker from "faker";
+import { faker } from "@faker-js/faker";
 import { SchemaWithoutRef } from "__types__/common";
 import { mapValues, isArray } from "lodash";
 
 const booleanGenerator = () => faker.datatype.boolean();
 const stringGenerator = (enums?: any[]) => {
   const getRandomArrayItem = (items: any[]) => items[Math.floor(Math.random() * items.length)];
-  return enums ? getRandomArrayItem(enums) : faker.random.words();
+  return enums ? getRandomArrayItem(enums) : faker.lorem.word();
 };
 const numberGenerator = (max?: number, min?: number) =>
-  faker.datatype.number({
+  faker.number.int({
     min,
     max,
   });
@@ -145,7 +145,7 @@ export class FakeDataGenerator {
       return schema;
     }
 
-    if(schema.example) return schema.example
+    if (schema.example) return schema.example;
 
     if (schema.type === "object" || schema.properties) {
       return this.object(schema);
