@@ -3,7 +3,7 @@ import { putBackRefs } from "./putBackRefs";
 import { mapValues, upperCase, isEmpty, get } from "lodash";
 import { parse } from "url";
 import converter from "swagger2openapi";
-import { getFirstSuccessResponse, getInput, toRoutePattern } from "./utils";
+import { getFileTypeByPath, getFirstSuccessResponse, getInput, getInputByYaml, toRoutePattern } from "./utils";
 import { Spec } from "swagger-schema-official";
 import { FakeGenOutput } from "__types__/common";
 import { FakeDataGenerator } from "./generators";
@@ -60,7 +60,9 @@ const getBasePathFromServers = (servers?: IServer[]): string => {
 };
 
 const fakerGenFromPath = (filePath: string): Promise<FakeGenOutput[]> => {
-  const input = getInput(filePath);
+  const fileType = getFileTypeByPath(filePath);
+  const input = fileType == "yaml" ? getInputByYaml(filePath) : getInput(filePath);
+
   if (input.swagger === "2.0") {
     return converter
       .convertObj(input, { path: true, warnOnly: true })

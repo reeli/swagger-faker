@@ -1,7 +1,8 @@
 import { IReference, IComponents, IResponse, IOpenAPI } from "__types__/OpenAPI";
 import { Dictionary, first, values, keys } from "lodash";
 import fs from "fs";
-import {pathToRegexp} from "path-to-regexp";
+import { pathToRegexp } from "path-to-regexp";
+import yaml from "js-yaml";
 
 export const getRef = (v: any): v is IReference => v?.$ref;
 
@@ -46,6 +47,7 @@ export function generateMockFile(fakeDataObj: any, fileName: string, outputFolde
 }
 
 export const getInput = (filePath: string) => JSON.parse(fs.readFileSync(filePath, "utf8")) as IOpenAPI;
+export const getInputByYaml = (filePath: string) => yaml.load(fs.readFileSync(filePath, "utf8")) as IOpenAPI;
 
 export const isJSON = (data: any) => {
   let res = typeof data === "string" ? data : JSON.stringify(data);
@@ -64,4 +66,16 @@ export const toRoutePattern = (route: string) => route.replace(/\{/gi, ":").repl
 export const isMatch = (routePattern: string) => (routePath: string) => {
   const regexp = pathToRegexp(routePattern);
   return !!regexp.exec(routePath);
+};
+
+export const getFileTypeByPath = (path: string) => {
+  if (path.includes("json")) {
+    return "json";
+  }
+
+  if (path.includes("yaml") || path.includes("yml")) {
+    return "yaml";
+  }
+
+  return "";
 };
