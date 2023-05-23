@@ -36,6 +36,7 @@ specifiers:
   typescript: ^5.0.4
 
 dependencies:
+  '@faker-js/faker': 8.0.1
   axios: 1.4.0
   commander: 10.0.1
   js-yaml: 4.1.0
@@ -51,7 +52,6 @@ devDependencies:
   '@babel/preset-env': 7.21.5_@babel+core@7.21.8
   '@babel/preset-typescript': 7.21.5_@babel+core@7.21.8
   '@changesets/cli': 2.26.1
-  '@faker-js/faker': 8.0.1
   '@rollup/plugin-babel': 6.0.3_lxlhoxoxyvbpb2ro632dgii55q
   '@rollup/plugin-typescript': 11.1.1_tnqflclqvwjfwgmj565zf7tvwe
   '@types/axios': 0.14.0
@@ -1531,7 +1531,7 @@ packages:
   /@faker-js/faker/8.0.1:
     resolution: {integrity: sha512-kbh5MenpTN9U0B4QcOI1NoTPlZHniSYQ3BHbhAnPjJGAmmFqxoxTE4sGdpy7ZOO9038DPGCuhXyMkjOr05uVwA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
-    dev: true
+    dev: false
 
   /@humanwhocodes/config-array/0.11.8:
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
