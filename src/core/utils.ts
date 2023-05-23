@@ -1,8 +1,10 @@
 import { IReference, IComponents, IResponse, IOpenAPI } from "__types__/OpenAPI";
+import axios, { AxiosError } from "axios";
 import { Dictionary, first, values, keys } from "lodash";
 import fs from "fs";
 import { pathToRegexp } from "path-to-regexp";
 import yaml from "js-yaml";
+import url from "url";
 
 export const getRef = (v: any): v is IReference => v?.$ref;
 
@@ -46,8 +48,8 @@ export function generateMockFile(fakeDataObj: any, fileName: string, outputFolde
   fs.writeFileSync(`${outputFolderName}/${fileName}.json`, fakeDataStr, "utf-8");
 }
 
-export const getInput = (filePath: string) => JSON.parse(fs.readFileSync(filePath, "utf8")) as IOpenAPI;
-export const getInputByYaml = (filePath: string) => yaml.load(fs.readFileSync(filePath, "utf8")) as IOpenAPI;
+export const getInputByJson = (data: string) => JSON.parse(data) as IOpenAPI;
+export const getInputByYaml = (data: string) => yaml.load(data) as IOpenAPI;
 
 export const isJSON = (data: any) => {
   let res = typeof data === "string" ? data : JSON.stringify(data);
@@ -78,4 +80,44 @@ export const getFileTypeByPath = (path: string) => {
   }
 
   return "";
+};
+
+export const getFileTypeByContentType = (contentType: string) => {
+  if (contentType.includes("json")) {
+    return "json";
+  }
+
+  if (contentType.includes("yaml") || contentType.includes("yml")) {
+    return "yaml";
+  }
+
+  return "";
+};
+
+export interface RemoteData {
+  data: string;
+  fileType: "yaml" | "json";
+}
+export const isRemoteData = (resp: any): resp is RemoteData => resp.data;
+
+export const fetchRemoteSpec = (url: string, timeout: number = 180000): Promise<RemoteData | AxiosError> => {
+  const instance = axios.create({ timeout });
+
+  return instance
+    .get(url)
+    .then((response) => {
+      return {
+        data: response.data,
+        fileType: getFileTypeByContentType(response.headers["content-type"]),
+      };
+    })
+    .catch((error) => {
+      console.error(`${error.code}: Fetch failed! Please checkout your network or swagger-faker.config.json file.`);
+      return error;
+    });
+};
+
+export const hasHttpOrHttps = (path: string) => {
+  const { protocol } = url.parse(path);
+  return protocol && /https?:/.test(protocol);
 };

@@ -3,7 +3,17 @@ import { putBackRefs } from "./putBackRefs";
 import { mapValues, upperCase, isEmpty, get } from "lodash";
 import { parse } from "url";
 import converter from "swagger2openapi";
-import { getFileTypeByPath, getFirstSuccessResponse, getInput, getInputByYaml, toRoutePattern } from "./utils";
+import fs from "fs";
+import {
+  fetchRemoteSpec,
+  getFileTypeByPath,
+  getFirstSuccessResponse,
+  getInputByJson,
+  getInputByYaml,
+  hasHttpOrHttps,
+  isRemoteData,
+  toRoutePattern,
+} from "./utils";
 import { Spec } from "swagger-schema-official";
 import { FakeGenOutput } from "__types__/common";
 import { FakeDataGenerator } from "./generators";
@@ -59,14 +69,28 @@ const getBasePathFromServers = (servers?: IServer[]): string => {
   return parse(server?.url)?.pathname || "";
 };
 
-const fakerGenFromPath = (filePath: string): Promise<FakeGenOutput[]> => {
+const fakerGenFromPath = (filePath: string, isFixed?: boolean): Promise<FakeGenOutput[]> => {
+  if (hasHttpOrHttps(filePath)) {
+    return fetchRemoteSpec(filePath).then((resp) => {
+      if (isRemoteData(resp)) {
+        return resp.fileType === "yaml"
+          ? fakerGen(getInputByYaml(resp.data), isFixed)
+          : fakerGen(resp.data as unknown as IOpenAPI, isFixed);
+      }
+      return resp;
+    });
+  }
   const fileType = getFileTypeByPath(filePath);
-  const input = fileType == "yaml" ? getInputByYaml(filePath) : getInput(filePath);
+  const fileStr = fs.readFileSync(filePath, "utf8");
+  const input = fileType == "yaml" ? getInputByYaml(fileStr) : getInputByJson(fileStr);
+  return fakerGen(input, isFixed);
+};
 
+const fakerGen = (input: IOpenAPI, isFixed = false) => {
   if (input.swagger === "2.0") {
     return converter
       .convertObj(input, { path: true, warnOnly: true })
-      .then((options: any) => fakerGenFromObj(options.openapi, false));
+      .then((options: any) => fakerGenFromObj(options.openapi, isFixed));
   }
 
   return fakerGenFromObj(input, false);

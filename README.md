@@ -32,7 +32,7 @@ Then it will generate a config file `swagger-faker.config.json` in current path,
 }
 ```
 
-- **sourcePaths**: `required`, put your swagger/openapi file path here. Supported format: json, yaml, yml
+- **sourcePaths**: `required`, put your swagger/openapi file path here. Either local path(eg. "./source/openapi.json") or remote path(eg. https://petstore.swagger.io/v2/swagger.json) is supported. Valid format: json, yaml, yml.
 - **outputFolder**: `optional`
 - **timeout**: `optional`,
 - **port**: `optional`
