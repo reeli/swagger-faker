@@ -69,11 +69,11 @@ export const isMatch = (routePattern: string) => (routePath: string) => {
 };
 
 export const getFileTypeByPath = (path: string) => {
-  if (path.includes("json")) {
+  if (path.endsWith(".json")) {
     return "json";
   }
 
-  if (path.includes("yaml") || path.includes("yml")) {
+  if (path.endsWith(".yaml") || path.endsWith(".yml")) {
     return "yaml";
   }
 
