@@ -1,53 +1,48 @@
+import { FakeDataGenerator } from "../generators";
 import { putBackRefs } from "../putBackRefs";
 import { IOpenAPI } from "../../../__types__/OpenAPI";
 import openApi from "./mocks/openapi.json";
 import { mockOpenApi } from "./mocks/mocks";
 
+jest.mock("@faker-js/faker", () => {
+  return {
+    faker: {
+      lorem: { words: () => "string words" },
+      number: {
+        int: ({ min, max }: { min?: number; max?: number }) => {
+          if (min && max) {
+            return min;
+          }
+          if (min) {
+            return min;
+          }
+          if (max) {
+            return max;
+          }
+          return 123;
+        },
+      },
+      datatype: {
+        boolean: () => true,
+      },
+      system: {
+        mimeType: () => "File",
+      },
+      date: {
+        past: () => new Date(2012, 2, 6, 6, 34, 23, 10),
+      },
+      internet: {
+        url: () => "https://www.google.com",
+        ip: () => "127.0.0.1",
+        ipv6: () => "::1",
+        email: () => "john@example.com",
+      },
+    },
+  };
+});
+
 describe("faker", () => {
-  beforeAll(() => {
-    jest.mock("faker", () => {
-      return {
-        random: {
-          words: () => "string words",
-        },
-        datatype: {
-          number: ({ min, max }: { min?: number; max?: number }) => {
-            if (min && max) {
-              return min;
-            }
-            if (min) {
-              return min;
-            }
-            if (max) {
-              return max;
-            }
-            return 123;
-          },
-          boolean: () => true,
-        },
-        system: {
-          mimeType: () => "File",
-        },
-        date: {
-          past: () => new Date(2012, 2, 6, 6, 34, 23, 10),
-        },
-        internet: {
-          url: () => "https://www.google.com",
-          ip: () => "127.0.0.1",
-          ipv6: () => "::1",
-          email: () => "john@example.com",
-        },
-      };
-    });
-  });
-
-  afterAll(() => {
-    jest.resetAllMocks();
-  });
-
   it("should generate correct fake data if given schema contains array", () => {
-    const { FakeDataGenerator } = require("../generators");
-
     const input = putBackRefs({
       schema: {
         type: "array",
@@ -83,8 +78,6 @@ describe("faker", () => {
   });
 
   it("should generate correct fake data if given schema contains circular ref", () => {
-    const { FakeDataGenerator } = require("../generators");
-
     const input = putBackRefs({
       schema: {
         $ref: "#/components/schemas/Tree",

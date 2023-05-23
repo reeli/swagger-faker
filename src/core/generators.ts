@@ -5,13 +5,14 @@ import { mapValues, isArray } from "lodash";
 const booleanGenerator = () => faker.datatype.boolean();
 const stringGenerator = (enums?: any[]) => {
   const getRandomArrayItem = (items: any[]) => items[Math.floor(Math.random() * items.length)];
-  return enums ? getRandomArrayItem(enums) : faker.lorem.word();
+  return enums ? getRandomArrayItem(enums) : faker.lorem.words();
 };
-const numberGenerator = (max?: number, min?: number) =>
-  faker.number.int({
+const numberGenerator = (max?: number, min?: number) => {
+  return faker.number.int({
     min,
     max,
   });
+};
 const fileGenerator = () => faker.system.mimeType();
 const dateTimeGenerator = () => faker.date.past().toISOString();
 const dateGenerator = () => dateTimeGenerator().slice(0, 10);
